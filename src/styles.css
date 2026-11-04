@@ -460,3 +460,29 @@ footer ul{gap:9px}
 footer .copy{font-weight:300;letter-spacing:.02em}
 
 @media (max-width:760px){.btn{font-size:16px}.rides-head h2{letter-spacing:-.02em}}
+
+/* VIDA VX2 extras */
+.vx-proof{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 24px}
+.vx-proof div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+.vx-proof b{display:block;font-size:clamp(24px,4vw,36px);color:var(--green-2)}.vx-proof span{color:var(--muted);font-size:14px}
+.vx-awards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.vx-awards li{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--green-2)}
+.vx-awards b{display:block;color:var(--text);font-size:15px}.vx-awards small{color:var(--muted)}
+.vx-gal{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.vx-gal li{position:relative;border-radius:16px;overflow:hidden;background:var(--surface)}
+.vx-gal img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+.vx-gal span{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:#fff;font-size:14px}
+.vx-gal b{display:block;font-size:18px}
+.vx-baas{background:var(--navy-2) center/cover;color:#fff;padding:64px 0}
+.vx-baas h2{font-size:clamp(30px,5vw,54px);margin:6px 0}.vx-baas h2 span{color:var(--green)}
+.vx-big{font-size:clamp(18px,2.6vw,26px);margin:0 0 12px}.vx-big b{color:var(--green)}
+.page.ev .card .img img{object-fit:cover}
+@media (max-width:760px){.vx-proof{grid-template-columns:repeat(2,1fr)}.vx-gal{grid-template-columns:1fr}.vx-baas{padding:44px 0}}
+
+/* ---- image fit fix: containers match photo ratio (4:3), no crop ---- */
+.bike-slot:has(img),.art:has(img),.card .img:has(img){border:0;padding:0;height:auto;aspect-ratio:4/3;border-radius:16px;background:transparent}
+.card .img:has(img){border-radius:10px}
+.bike-slot img,.art img,.card .img img,.page.ev .card .img img{width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block}
+.pg-art:has(img){height:auto;aspect-ratio:4/3}
+.pane:has(.art img){grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}
+@media (max-width:760px){.bike-slot:has(img),.art:has(img),.pg-art:has(img){height:auto}}

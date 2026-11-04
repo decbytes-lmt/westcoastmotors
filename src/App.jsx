@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, waLink } from './data.js'
+import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, waLink } from './data.js'
 
 const KEY = 'wcm-intro-seen'
 const P = {
@@ -308,6 +308,8 @@ function ModelPage({ m }) {
         <p className="fine">{ev ? '*Range and speed as published by VIDA. Real-world range varies with riding mode and conditions.' : 'Specifications as published by Hero MotoCorp. Confirm details and availability at the showroom.'}</p>
       </div></section>
 
+      {m.name.includes('VX2') && <section className="mp-sec" aria-labelledby="g-t"><div className="wrap"><div className="sec-head"><div><p className="eyebrow">Gallery</p><h2 id="g-t" className="display">VX2 on the <span>road</span></h2></div></div><VxGallery /></div></section>}
+
       <section className="mp-sec alt" aria-labelledby="b-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">How to buy</p><h2 id="b-t" className="display">In just a few steps</h2></div></div>
         <ol className="steps">{steps.map(([ic, t, s], i) => <li key={t} style={{ '--i': i }}><span className="ico"><Icon n={ic} size={20} /></span><b>{t}</b><small>{s}</small></li>)}</ol>
@@ -327,6 +329,39 @@ function ModelPage({ m }) {
         <div className="grid">{related.map((x, i) => <ModelCard key={x.name} m={x} i={i} />)}</div>
       </div></section>
     </div>
+  )
+}
+
+
+/* ---------- VIDA VX2 extras: proof stats, awards, gallery, BaaS offer ---------- */
+function VxGallery() {
+  return (
+    <ul className="vx-gal">{VX2_INFO.gallery.map(([img, t, s]) => (
+      <li key={img}><img src={`./images/${img}`} alt={'VIDA VX2 ' + t + ' – ' + s} loading="lazy" /><span><b>{t}</b>{s}</span></li>
+    ))}</ul>
+  )
+}
+function VxExtras() {
+  const I = VX2_INFO, B = I.baas
+  return (
+    <>
+      <section className="mp-sec alt" aria-labelledby="vx-a"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">VIDA VX2</p><h2 id="vx-a" className="display">Electric 2 Wheeler <span>of the Year</span></h2></div></div>
+        <div className="vx-proof">{I.proof.map(([v, l]) => <div key={l}><b>{v}</b><span>{l}</span></div>)}</div>
+        <ul className="vx-awards">{I.awards.map(([t, w]) => <li key={t}><Icon n="award" size={18} /><div><b>{t}</b><small>{w}</small></div></li>)}</ul>
+      </div></section>
+      <section className="mp-sec" aria-labelledby="vx-g"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">Ghar Ghar Evooter</p><h2 id="vx-g" className="display">Made for <span>every road</span></h2></div></div>
+        <VxGallery />
+      </div></section>
+      <section className="vx-baas" aria-labelledby="vx-b" style={{ backgroundImage: `linear-gradient(90deg,rgba(6,25,46,.92),rgba(6,25,46,.35)),url(./images/vx2-duo.jpg)` }}><div className="wrap">
+        <p className="eyebrow">VIDA BaaS · Battery as a Service</p>
+        <h2 id="vx-b" className="display">Starting @ just <span>{B.from}</span></h2>
+        <p className="vx-big">With BaaS @ just <b>{B.with}</b> &amp; per km cost <b>{B.perKm}</b></p>
+        <p className="fine light">{B.note}</p>
+        <div className="pg-cta"><a className="btn" href={waLink('Hi West Coast Motors, tell me about VIDA BaaS offer.')} target="_blank" rel="noreferrer">Ask about BaaS</a></div>
+      </div></section>
+    </>
   )
 }
 
@@ -369,9 +404,12 @@ function RidePage({ kind, go }) {
           </div>
           <div className="grid" key={filter}>{shown.map((m, i) => <ModelCard key={m.name} m={m} i={i} />)}</div>
           {!ev && <p className="fine">Specifications as published by Hero MotoCorp. Prices will be updated soon. Contact the showroom for the latest price and availability.</p>}
-          {ev && <p className="fine">*Range and speed as published by VIDA (certified / IDC). Prices will be updated soon. Ask our team about charging, battery and EV service support.</p>}
+          {ev && <p className="fine">*Range and speed as published by VIDA (certified / IDC). Ask our team about charging, battery and EV service support.</p>}
+          {ev && <p className="fine">{VX2_INFO.priceNote}</p>}
         </div>
       </section>
+
+      {ev && <VxExtras />}
 
       <section className="pg-band"><div className="wrap">
         <div><h3 className="display">{ev ? 'Prefer a petrol ride?' : 'Prefer going electric?'}</h3><p>{ev ? 'Browse our petrol bikes and scooters.' : 'Meet the Hero VIDA electric scooters.'}</p></div>

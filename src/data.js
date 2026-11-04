@@ -108,11 +108,11 @@ const ev = (name, cat, o) => {
   const grp = (labels) => Object.fromEntries(specs.filter(s => labels.includes(s[0])))
   const perf = [o.rangeLabel || 'Certified range', 'Top speed', '0–40 km/h', 'Motor', 'Ride modes']
   const batt = ['Battery', 'Battery type', 'Riding cost']
-  const full = { 'Performance': grp(perf), 'Battery & charging': grp(batt) }
+  const full = { 'Performance': grp(perf), 'Battery & charging': grp(batt), ...(o.extra || {}) }
   const rest = specs.filter(s => ![...perf, ...batt].includes(s[0]))
   if (rest.length) full['Safety & convenience'] = Object.fromEntries(rest)
   return {
-    name, kind: 'Electric scooter', cat, tag: o.tag || '', price: '', image: null, url: o.url || 'https://www.vidaworld.com/',
+    name, kind: 'Electric scooter', cat, tag: o.tag || '', price: o.price || '', image: o.image || null, url: o.url || 'https://www.vidaworld.com/',
     specs, colours: o.colours || [],
     stats: [[o.range, 'km*', o.rangeLabel || 'Certified range'], [o.top, 'km/h', 'Top speed'], [o.acc, 'sec', '0–40 km/h'], [bn, bu.split(' ')[0], 'Battery']],
     highlights: o.highlights || [], features: o.features || [], full, brochure: o.brochure || '', warranty: '',
@@ -131,27 +131,47 @@ const VX2 = 'https://www.vidaworld.com/vx2-electric-scooter.html'
 const GO = ['Matte Giallo Lime', 'Nexus Blue', 'Matt Inspired White', 'Pearl Red', 'Pearl Black', 'Metallic Matt Gun Metal Grey']
 const PLUS = [...GO.slice(0, 5), 'Autumn Orange', 'Metallic Matt Gun Metal Grey']
 const M_GO = 'Eco (0–45 km/h), Ride (0–70 km/h)'
+
+// ---- Data from VIDA key-specification sheet + West Coast Motors price list (effective 01.10.2026) ----
+const vx = (real, wt, us, brk, disp, chg) => ({
+  'Real-world & dimensions': { 'Real-world range (Eco)**': real + ' km', 'Weight': wt + ' kg', 'Seat height / length': '777 / 851 mm', 'Under-seat storage': us + ' L', 'Front storage': '4.8 L' },
+  'Brakes, wheels & tech': { 'Brakes': brk + ' (CBS)', 'Wheels / tyres': 'Alloy, 12/12', 'Display': disp, 'Connectivity': 'Yes, VIDA Edge', 'Navigation': 'Turn-by-turn (TBT)', 'Lighting': 'All LED', 'Phone charging': 'Yes', 'OTA updates': 'All control units excluding HMI', 'Battery IP rating': 'IP67' },
+  'Charging**': chg,
+})
+const CHG_P44 = { 'AC 0–100%': '5 h 8 min (1 kW Zap charger)', 'AC 0–80%': '3 h 17 min (1 kW Zap charger)', 'AC 20–80%': '2 h 28 min (1 kW Zap charger)', 'Charger rating': '1000 W (Zap charger)', 'Fast charger 0–80%': '65 min', 'Fast charger 0–100%': '150 min' }
+const CHG_P34 = { 'AC 0–100%': '6 h 36 min', 'AC 0–80%': '4 h 44 min', 'AC 20–80%': '3 h 33 min', 'Charger rating': '580 W', 'Fast charger 0–80%': '62 min', 'Fast charger 0–100%': '140 min' }
+const CHG_G22 = { 'AC 0–100%': '4 h 51 min (580 W) / 3 h 20 min (1 kW Zap)', 'AC 0–80%': '3 h 7 min (580 W) / 1 h 41 min (1 kW Zap)', 'AC 20–80%': '2 h 19 min (580 W) / 1 h 18 min (1 kW Zap)', 'Charger rating': '580 W / 1000 W (Zap charger)', 'Fast charger 0–80%': '65 min', 'Fast charger 0–100%': '120 min' }
+const VX2_FIX = [['Battery type', 'Fixed battery'], ['Reverse', 'Park mode (reverse up to 3 km/h)'], ['Braking', 'Regenerative braking'], ['Riding cost', '₹0.17/km (claimed by VIDA)']]
 export const EV_CATS = ['VX2 Go', 'VX2 Plus', 'V2']
 export const EV = [
-  ev('VIDA VX2 Go 2.2 kWh', 'VX2 Go', { range: '93', top: '70', batt: '2.2 kWh', acc: '4.2', modes: M_GO, more: VX2_MORE, colours: GO, url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
-  ev('VIDA VX2 Go 3.1 kWh', 'VX2 Go', { range: '127', top: '70', batt: '3.1 kWh', acc: '4.5', modes: M_GO, more: VX2_MORE, colours: GO, url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
-  ev('VIDA VX2 Go 3.4 kWh', 'VX2 Go', { range: '146', top: '70', batt: '3.4 kWh', acc: '4.2', modes: M_GO, more: VX2_MORE, colours: ['Metallic Matt Gun Metal Grey', ...GO.slice(1, 5)], url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
-  ev('VIDA VX2 Plus 3.4 kWh', 'VX2 Plus', { range: '146', top: '80', batt: '3.4 kWh', acc: '3.1', modes: 'Eco (0–45), Ride (0–70), Sports (0–80 km/h)', more: VX2_MORE, colours: PLUS, url: VX2, features: [...VX2_FEAT, ['Colour TFT display', 'The TFT screen changes colour with each ride mode (Plus variants).'], ['Sports mode', 'Extra ride mode for high-speed fun on longer routes (Plus variants only).']], highlights: ['Sports mode', ...VX2_HL] }),
-  ev('VIDA VX2 Plus 4.4 kWh', 'VX2 Plus', { range: '187', top: '90', batt: '4.4 kWh', acc: '3.1', modes: 'Eco (0–45), Ride (0–70), Sports (0–90 km/h)', more: VX2_MORE, colours: PLUS, url: VX2, features: [...VX2_FEAT, ['Colour TFT display', 'The TFT screen changes colour with each ride mode (Plus variants).'], ['Sports mode', 'Extra ride mode for high-speed fun on longer routes (Plus variants only).']], highlights: ['Sports mode', ...VX2_HL] }),
-  ev('VIDA V2 Plus', 'V2', { rangeLabel: 'IDC range', range: '143', top: '85', batt: '3.44 kWh', acc: '3.4', motor: '6 kW peak, 25 Nm', modes: 'Eco, Ride, Sports', more: [['Braking', 'Regenerative braking (ReGen)']], url: 'https://www.vidaworld.com/vida-v2-plus.html', features: [['6 kW motor', 'Peak motor power of 6 kW with 25 Nm of instant torque.'], ['Regenerative braking (ReGen)', 'Recovers energy while braking to stretch your range.'], ['Ride modes', 'Pick the mode that suits your ride, from city to open road.']], highlights: ['6 kW motor', '25 Nm torque', 'ReGen braking'] }),
+  ev('VIDA VX2 Go 2.2 kWh', 'VX2 Go', { price: '₹ 1,04,990', image: 'vx2-white.jpg', extra: vx(75, 106, '33.2', 'Drum/Drum', '4.3" LCD', CHG_G22), range: '93', top: '70', batt: '2.2 kWh', acc: '4.2', modes: M_GO, more: VX2_MORE, colours: GO, url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
+  ev('VIDA VX2 Go 2.2 kWh RQ', 'VX2 Go', { price: '₹ 1,09,990', image: 'vx2-white-ride.jpg', extra: vx(75, 106, '33.2', 'Drum/Drum', '4.3" LCD', CHG_G22), range: '93', top: '70', batt: '2.2 kWh', acc: '4.2', modes: M_GO, more: VX2_MORE, colours: GO, url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
+  ev('VIDA VX2 Go 3.1 kWh', 'VX2 Go', { price: '₹ 1,15,990', image: 'vx2-go-black.jpg', range: '127', top: '70', batt: '3.1 kWh (fixed)', acc: '4.5', modes: M_GO, more: VX2_FIX, colours: GO, url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
+  ev('VIDA VX2 Go 3.4 kWh', 'VX2 Go', { price: '₹ 1,25,990', image: 'vx2-blue.jpg', extra: vx(110, 115, '27.2', 'Drum/Drum', '4.3" LCD', CHG_P34), range: '146', top: '70', batt: '3.4 kWh', acc: '4.2', modes: M_GO, more: VX2_MORE, colours: ['Metallic Matt Gun Metal Grey', ...GO.slice(1, 5)], url: VX2, features: VX2_FEAT, highlights: VX2_HL }),
+  ev('VIDA VX2 Plus 3.4 kWh', 'VX2 Plus', { price: '₹ 1,35,990', image: 'vx2-grey.jpg', extra: vx(110, 115, '27.2', 'Disc/Drum', '4.3" TFT', CHG_P34), range: '146', top: '80', batt: '3.4 kWh', acc: '3.1', modes: 'Eco (0–45), Ride (0–70), Sports (0–80 km/h)', more: VX2_MORE, colours: PLUS, url: VX2, features: [...VX2_FEAT, ['Colour TFT display', 'The TFT screen changes colour with each ride mode (Plus variants).'], ['Sports mode', 'Extra ride mode for high-speed fun on longer routes (Plus variants only).']], highlights: ['Sports mode', ...VX2_HL] }),
+  ev('VIDA VX2 Plus 4.4 kWh', 'VX2 Plus', { price: '₹ 1,55,990', image: 'vx2-red.jpg', tag: 'Top pick', extra: vx(140, 120, '27.2', 'Disc/Drum', '4.3" TFT', CHG_P44), range: '187', top: '90', batt: '4.4 kWh', acc: '3.1', modes: 'Eco (0–45), Ride (0–70), Sports (0–90 km/h)', more: VX2_MORE, colours: PLUS, url: VX2, features: [...VX2_FEAT, ['Colour TFT display', 'The TFT screen changes colour with each ride mode (Plus variants).'], ['Sports mode', 'Extra ride mode for high-speed fun on longer routes (Plus variants only).']], highlights: ['Sports mode', ...VX2_HL] }),
+  ev('VIDA V2 Plus', 'V2', { price: '₹ 1,45,990', rangeLabel: 'IDC range', range: '143', top: '85', batt: '3.44 kWh', acc: '3.4', motor: '6 kW peak, 25 Nm', modes: 'Eco, Ride, Sports', more: [['Braking', 'Regenerative braking (ReGen)']], url: 'https://www.vidaworld.com/vida-v2-plus.html', features: [['6 kW motor', 'Peak motor power of 6 kW with 25 Nm of instant torque.'], ['Regenerative braking (ReGen)', 'Recovers energy while braking to stretch your range.'], ['Ride modes', 'Pick the mode that suits your ride, from city to open road.']], highlights: ['6 kW motor', '25 Nm torque', 'ReGen braking'] }),
   ev('VIDA V2 Pro', 'V2', { rangeLabel: 'IDC range', range: '165', top: '90', batt: '3.94 kWh (2 × 1.97 kWh)', acc: '2.9', motor: '6 kW peak, 25 Nm', modes: 'Eco, Ride, Sports, Boost', more: [['Braking', 'Regenerative braking (ReGen)']], features: [['6 kW motor', 'Peak motor power of 6 kW with 25 Nm of instant torque.'], ['Regenerative braking (ReGen)', 'Recovers energy while braking to stretch your range.'], ['Ride modes', 'Pick the mode that suits your ride, from city to open road.']], highlights: ['6 kW motor', '25 Nm torque', 'ReGen braking'] }),
 ]
 
+export const VX2_INFO = {
+  priceNote: 'Effective ex-showroom prices from the West Coast Motors price list, effective 01.10.2026 (ex-showroom less ₹5,000 FAME II subsidy). Go 3.1 kWh is the fixed-battery variant. Prices may change; confirm at the showroom.',
+  awards: [['Record for the longest EV ride (12,000 km+)', 'Asia Book of Records'], ['Ranks highest in scooter EV segment', 'J.D. Power Initial Quality Study 2026'], ['Electric Two Wheeler of the Year', 'Jagran HiTech Awards'], ['EV Scooter of the Year', 'Acko Drive Awards 2026'], ['Two Wheeler EV Brand of the Year', 'CarBike360 Auto Excellence Award 2026'], ['Star EV Scooter of the Year', 'EV India Awards'], ['Global Most Trusted Brand 2026', 'Consumer & industry research by The Brand Story']],
+  baas: { from: '₹ 84,990*', with: '₹ 44,990*', perKm: '₹ 1.24', note: '*Limited-period offer. T&C apply. BaaS offer is subject to the terms & conditions of respective financiers. Image shown may differ from the variant mentioned.' },
+  proof: [['5,900+', 'Fast charging stations'], ['770+', 'Outlets for sales & service'], ['187 km', 'IDC range (Plus 4.4)'], ['6 kW', 'Swing-arm motor']],
+  gallery: [['vx2-mountain.jpg', 'Plus 4.4', 'Max range. Max speed.'], ['vx2-commute.jpg', 'Plus 3.4', 'More speed. More thrill.'], ['vx2-go-black.jpg', 'Go 3.4', 'Extra range. Extra saving.'], ['vx2-white-ride.jpg', 'Go 2.2', 'Fast charge. Easy ride.']],
+}
+
 export const SLIDES = [
   { eyebrow: 'Hero', title: 'Xtreme', sub: '250R', tag: ['Built to ', 'Thrill'], cta: 'Explore Petrol', href: '#/petrol', note: 'Hero banner image: Xtreme 250R on mountain road', image: null },
-  { eyebrow: 'Hero VIDA', title: 'Ride the', sub: 'Change', tag: ['Smarter. Greener. ', 'Together.'], cta: 'Explore EV', href: '#/ev', note: 'Hero banner image: VIDA electric scooter', image: null },
+  { eyebrow: 'Hero VIDA', title: 'Ride the', sub: 'Change', tag: ['Smarter. Greener. ', 'Together.'], cta: 'Explore EV', href: '#/ev', note: 'Hero banner image: VIDA electric scooter', image: 'vx2-red.jpg' },
   { eyebrow: 'Hero', title: 'Ride the', sub: 'Hero Way', tag: ['Performance. Trust. ', 'Togetherness.'], cta: 'Visit Our Showroom', href: '#contact', note: 'Hero banner image: showroom or riders', image: null },
 ]
 
 // "Find Your Ride" selector panels. Put photos in public/images/ and set image: 'file.png'.
 export const RIDE = {
   petrol: { label: 'Petrol Two-Wheelers', head: ['Power. Performance.', 'Adventure.'], cta: 'Explore Petrol Bikes', image: null, note: 'Image: red Hero bike (transparent PNG)' },
-  ev: { label: 'EV Two-Wheelers', head: ['Ride Electric.', 'Live Better.'], cta: 'Explore EV Range', image: null, note: 'Image: VIDA electric scooter (transparent PNG)' },
+  ev: { label: 'EV Two-Wheelers', head: ['Ride Electric.', 'Live Better.'], cta: 'Explore EV Range', image: 'vx2-red.jpg', note: 'Image: VIDA electric scooter (transparent PNG)' },
 }
 
 // Dedicated Petrol / EV pages. Put photos in public/images/ and set image: 'file.png'.
@@ -165,7 +185,7 @@ export const PAGE = {
   ev: {
     chip: 'Electric', title: 'EV Two-Wheelers', lines: ['Ride Electric.', 'Live Better.'],
     sub: 'Hero VIDA electric scooters. Smarter. Greener. Together.',
-    note: 'Hero banner image: VIDA electric scooter (transparent PNG)', image: null,
+    note: 'Hero banner image: VIDA electric scooter (transparent PNG)', image: 'vx2-red.jpg',
     perks: [['zap', 'Charging', 'Ask our team about charging options'], ['shield', 'Battery', 'Get your battery questions answered'], ['tool', 'EV service', 'Dedicated EV service support']],
   },
 }
