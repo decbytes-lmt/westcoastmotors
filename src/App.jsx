@@ -25,6 +25,8 @@ const Icon = ({ n, size = 24 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{P[n]}</svg>
 )
 
+const WcmLogo = () => <span className="wcm-crop"><img src="./images/wcm-logo.png" alt={SITE.name} /></span>
+
 /* ---------- Hero logo (official SVG; black parts follow text colour) ---------- */
 const HeroLogo = ({ className = '', height = 32, title = 'Hero' }) => (
   <svg className={'hero-mark ' + className} viewBox="0 0 122 41" height={height} width={height * 122 / 41} role="img" aria-label={title} xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +55,7 @@ function Intro({ stage, setStage }) {
     <div className={'splash' + (leaving ? ' out' : '')} role="status" aria-label="Loading West Coast Motors">
       <div className="splash-in">
         <div className="splash-hero"><HeroLogo height={72} /></div>
-        <div className="splash-name display">{SITE.name}</div>
+        <div className="splash-wcm"><WcmLogo /></div>
         <div className="splash-tag">{SITE.tagline}</div>
         <div className="splash-bar"><i /></div>
       </div>
@@ -81,7 +83,7 @@ function Header({ route }) {
       <span className="social"><a href={SITE.facebook}>Facebook</a><a href={SITE.instagram}>Instagram</a><a href={SITE.youtube}>YouTube</a></span>
     </div></div>
     <header className="nav"><div className="wrap">
-      <a className="brand" href="#/"><span className="hero-logo"><HeroLogo height={34} /></span><span className="dealer"><b>{SITE.name}</b><i>{SITE.tagline}</i></span></a>
+      <a className="brand" href="#/"><span className="hero-logo"><HeroLogo height={34} /></span><span className="dealer"><WcmLogo /></span></a>
       <nav aria-label="Main"><ul className={'menu' + (open ? ' open' : '')}>
         {NAV.map(([l, h, k]) => <li key={l} className={k === route ? 'on' : ''}><a href={h} onClick={() => setOpen(false)} {...(k === route ? { 'aria-current': 'page' } : {})}>{l}</a></li>)}
       </ul></nav>
@@ -634,7 +636,7 @@ function Footer() {
   return (
     <footer id="contact">
       <div className="wrap">
-        <div><h4>{SITE.name}</h4><p>Authorised Hero MotoCorp dealer.<br />{SITE.address}</p></div>
+        <div><div className="foot-logo"><WcmLogo /></div><p>Authorised Hero MotoCorp dealer.<br />{SITE.address}</p></div>
         <div><h4>Explore</h4><ul><li><a href="#/petrol">Petrol</a></li><li><a href="#/ev">EV</a></li><li><a href="#about">About Us</a></li></ul></div>
         <div><h4>Services</h4><ul><li><a href={testRide()} target="_blank" rel="noreferrer">Test Ride</a></li><li><a href="#services">Service Booking</a></li><li><a href="#services">Finance &amp; Insurance</a></li></ul></div>
         <div><h4>Contact</h4><ul><li><a href={`tel:${SITE.salesTel}`}>Sales: {SITE.salesPhone}</a></li><li><a href={`tel:${SITE.serviceTel}`}>Service: {SITE.servicePhone}</a></li><li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li></ul></div>
