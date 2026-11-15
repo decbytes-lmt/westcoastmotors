@@ -606,3 +606,16 @@ html{overflow-x:hidden}
 .splash-in{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 16px;box-sizing:border-box}
 .splash-hero{display:flex;justify-content:center}
 .splash-wcm{max-width:calc(100vw - 48px)}
+
+/* mobile header fit: my logo overrode .dealer{display:none}, header got too wide, Chrome zoomed out */
+body{overflow-x:clip}
+@media (max-width:560px){
+  .nav .wrap{gap:6px;padding-left:12px;padding-right:12px}
+  .brand{gap:8px}
+  .brand .hero-mark{height:24px;width:auto}
+  .dealer{padding-left:8px}
+  .dealer .wcm-crop{--h:32px}
+  .nav-cta{padding:8px 11px;font-size:12px}
+  .burger{width:38px;height:38px}
+}
+@media (max-width:359px){.dealer{display:none}}
