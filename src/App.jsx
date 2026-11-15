@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, waLink } from './data.js'
+import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, VX2_PLUS, VX2_GO, VIDA_COMPARE, VIDA_BUY, waLink } from './data.js'
 
 const KEY = 'wcm-intro-seen'
 const P = {
@@ -62,6 +62,9 @@ function Intro({ stage, setStage }) {
   return null
 }
 
+import BikePage from './bike/BikePage.jsx'
+import { BIKES } from './bike/data/index.js'
+
 /* ---------- Site ---------- */
 const NAV = [['Home', '#/', 'home'], ['Petrol', '#/petrol', 'petrol'], ['EV', '#/ev', 'ev'], ['Services', '#services'], ['About Us', '#about'], ['Contact', '#contact']]
 const testRide = (m) => waLink(m ? `Hi West Coast Motors, I want to book a test ride for ${m}.` : 'Hi West Coast Motors, I want to book a test ride.')
@@ -88,27 +91,46 @@ function Header({ route }) {
   </>)
 }
 
+// Remember where each video stopped, so it resumes there next time it is shown (survives slide/page changes)
+const RESUME = { hero: new Map(), reel: new Map() }
+const resume = (store, key) => ({
+  onLoadedMetadata: e => { const v = e.currentTarget, t = store.get(key); if (t && t < v.duration - 1) v.currentTime = t },
+  onTimeUpdate: e => { store.set(key, e.currentTarget.currentTime) },
+})
+const ytId = u => { const m = String(u || '').match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? m[1] : '' }
 function Hero() {
-  const [i, setI] = useState(0)
+  // `prev` = slide that is leaving; kept under the new one while it slides in from the right
+  const [{ i, prev }, setSl] = useState({ i: 0, prev: null })
   const [paused, setPaused] = useState(false)
+  const [muted, setMuted] = useState(true)
   const reduce = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
-  const go = useCallback(d => setI(v => (v + d + SLIDES.length) % SLIDES.length), [])
-  useEffect(() => { if (paused || reduce) return; const t = setInterval(() => go(1), 6500); return () => clearInterval(t) }, [paused, reduce, go])
+  const go = useCallback(d => setSl(v => ({ i: (v.i + d + SLIDES.length) % SLIDES.length, prev: v.i })), [])
+  const jump = useCallback(k => setSl(v => (k === v.i ? v : { i: k, prev: v.i })), [])
+  useEffect(() => { if (prev === null) return; const t = setTimeout(() => setSl(v => ({ ...v, prev: null })), 900); return () => clearTimeout(t) }, [prev, i])
+  const ps = prev !== null && !reduce ? SLIDES[prev] : null
+  const oldBg = ps && !ytId(ps.video) && ps.videoFile && ps.videoFile !== SLIDES[i].videoFile ? ps : null
   const s = SLIDES[i]
+  const yt = ytId(s.video)
+  const bg = yt ? '' : (s.videoFile || '')
+  const vid = yt || bg
+  useEffect(() => { if (paused || reduce || yt) return; const t = setTimeout(() => go(1), s.ms || 30000); return () => clearTimeout(t) }, [i, paused, reduce, go, yt, bg, s.ms])
   return (
-    <section className="hero" aria-roledescription="carousel" aria-label="Featured" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <section className={'hero' + (bg ? ' has-bg' : '')} aria-roledescription="carousel" aria-label="Featured" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      {bg && oldBg && <video className="hero-bg slide-old" key={'old-' + oldBg.videoFile} src={`./videos/${oldBg.videoFile}`} poster={oldBg.poster ? `./images/${oldBg.poster}` : undefined} autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} {...resume(RESUME.hero, oldBg.videoFile)} />}
+      {bg && <><video className={'hero-bg' + (oldBg ? ' slide-in' : '')} key={bg} src={`./videos/${bg}`} poster={s.poster ? `./images/${s.poster}` : undefined} autoPlay muted={muted} loop playsInline preload="auto" aria-label={s.videoTitle || 'Video'} {...resume(RESUME.hero, bg)} /><div className="hero-shade" /></>}
       <button className="arrow l" aria-label="Previous slide" onClick={() => go(-1)}><Icon n="left" size={18} /></button>
-      <div className="wrap" key={i}>
+      <div className={'wrap' + (yt ? ' has-vid' : '')} key={i}>
         <div className="hero-copy">
           <div className="eyebrow">{s.eyebrow}</div>
           <h1 className="display">{s.title} <span>{s.sub}</span></h1>
           <div className="tag display">{s.tag[0]}<em>{s.tag[1]}</em></div>
           <a className="btn" href={s.href}>{s.cta}</a>
         </div>
-        <div className="bike-slot">{s.image ? <img src={`./images/${s.image}`} alt="" /> : s.note}</div>
+        {!bg && <div className={'bike-slot' + (yt ? ' vid' : '')}>{yt ? <iframe src={`https://www.youtube-nocookie.com/embed/${yt}?rel=0&modestbranding=1`} title={s.videoTitle || 'Video'} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : s.videoFile ? <video src={`./videos/${s.videoFile}`} poster={s.poster ? `./images/${s.poster}` : undefined} controls playsInline preload="metadata" aria-label={s.videoTitle || 'Video'} /> : s.image ? <img src={`./images/${s.image}`} alt="" /> : s.note}</div>}
       </div>
+      {bg && <button type="button" className="hero-snd" aria-pressed={!muted} onClick={() => setMuted(m => !m)}>{muted ? 'Sound off' : 'Sound on'}</button>}
       <aside className="trust"><span><Icon n="award" size={18} /> Trusted by Thousands</span><span><Icon n="shield" size={18} /> Authorised Hero Dealer</span><span><Icon n="tool" size={18} /> Expert Service &amp; Support</span></aside>
-      <div className="dots">{SLIDES.map((_, k) => <button key={k} className={k === i ? 'on' : ''} aria-label={`Slide ${k + 1}`} aria-current={k === i} onClick={() => setI(k)} />)}</div>
+      <div className="dots">{SLIDES.map((_, k) => <button key={k} className={k === i ? 'on' : ''} aria-label={`Slide ${k + 1}`} aria-current={k === i} onClick={() => jump(k)} />)}</div>
       <button className="arrow r" aria-label="Next slide" onClick={() => go(1)}><Icon n="right" size={18} /></button>
     </section>
   )
@@ -157,6 +179,25 @@ function RideSwitch({ mode, onChoose, className = '' }) {
       </div>
     </div>
   )
+}
+
+// Muted reel for the petrol hero: switches video every 30 s, each resumes where it stopped
+function PetrolReel({ items, className }) {
+  const [{ i, prev }, setSl] = useState({ i: 0, prev: null })
+  const [v, p, t] = items[i]
+  const many = items.length > 1
+  useEffect(() => {
+    if (!many || reduced()) return
+    const id = setTimeout(() => setSl(s => ({ i: (s.i + 1) % items.length, prev: s.i })), 30000)
+    return () => clearTimeout(id)
+  }, [i, many, items.length])
+  useEffect(() => { if (prev === null) return; const id = setTimeout(() => setSl(s => ({ ...s, prev: null })), 900); return () => clearTimeout(id) }, [prev, i])
+  const old = prev !== null && prev !== i && !reduced() ? items[prev] : null
+  // new video slides in from the right and covers the previous one, which keeps playing underneath
+  return <>
+    {old && <video className={className + ' slide-old'} key={'old-' + old[0]} src={`./videos/${old[0]}`} poster={`./images/${old[1]}`} autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} {...resume(RESUME.reel, old[0])} />}
+    <video className={className + (old ? ' slide-in' : '')} key={v} src={`./videos/${v}`} poster={`./images/${p}`} autoPlay={!reduced()} muted loop playsInline preload="metadata" controls={reduced()} aria-label={t} {...resume(RESUME.reel, v)} />
+  </>
 }
 
 // Home: choose a side. Panels animate, ripple plays, then the dedicated page opens.
@@ -222,7 +263,7 @@ function ModelCard({ m, i }) {
 }
 
 /* ---------- One page per vehicle (like Hero's own model pages) ---------- */
-const DOTS = [['lime', '#b6e03a'], ['teal', '#0f9d9a'], ['cyan', '#22d3ee'], ['nexus', '#1d4ed8'], ['blue', '#2563eb'], ['red', '#dc2626'], ['orange', '#f97316'], ['yellow', '#facc15'], ['green', '#16a34a'], ['maroon', '#7f1d1d'], ['silver', '#c0c4cc'], ['gun metal', '#4b5563'], ['grey', '#6b7280'], ['gray', '#6b7280'], ['white', '#f3f4f6'], ['black', '#111827']]
+const DOTS = [['lime', '#b6e03a'], ['teal', '#0f9d9a'], ['cyan', '#22d3ee'], ['purple', '#5b21b6'], ['gold', '#d4a017'], ['nexus', '#1d4ed8'], ['blue', '#2563eb'], ['red', '#dc2626'], ['orange', '#f97316'], ['yellow', '#facc15'], ['green', '#16a34a'], ['maroon', '#7f1d1d'], ['silver', '#c0c4cc'], ['gun metal', '#4b5563'], ['grey', '#6b7280'], ['gray', '#6b7280'], ['white', '#f3f4f6'], ['black', '#111827']]
 const dot = n => { const l = n.toLowerCase(); const hit = [...new Set(DOTS.filter(([k]) => l.includes(k)).map(([, c]) => c))].slice(0, 2); return hit.length === 2 ? `linear-gradient(135deg,${hit[0]} 50%,${hit[1]} 50%)` : (hit[0] || '#9ca3af') }
 
 function ModelPage({ m }) {
@@ -250,6 +291,7 @@ function ModelPage({ m }) {
             <div className="crumb rise" style={R(0)}><a href="#/">Home</a> / <a href={'#/' + m.page}>{ev ? 'EV' : 'Petrol'}</a> / {m.name}</div>
             <div className="rise" style={R(1)}><span className="chip">{m.kind} · {m.cat}</span> {m.tag && <span className="chip hot">{m.tag}</span>}</div>
             <h1 id="mp-t" className="display rise" style={R(2)}>{m.name}</h1>
+            {m.intro && <p className="pg-sub rise" style={R(3)}>{m.intro}</p>}
             {m.highlights.length > 0 && <ul className="hl rise" style={R(3)}>{m.highlights.map(h => <li key={h}>{h}</li>)}</ul>}
             <div className="price-row big rise" style={R(4)}><span>Ex-showroom price</span><b className={'price' + (m.price ? '' : ' empty')}>{m.price || '₹ —'}</b></div>
             <div className="pg-cta rise" style={R(5)}>
@@ -291,6 +333,7 @@ function ModelPage({ m }) {
         <section className="mp-sec" id="colours" aria-labelledby="c-t"><div className="wrap">
           <div className="sec-head"><div><p className="eyebrow">Colours</p><h2 id="c-t" className="display">Pick your colour</h2></div></div>
           <ul className="swatches">{m.colours.map(c => <li key={c}><i style={{ background: dot(c) }} /><span>{c}</span></li>)}</ul>
+          {m.colourImg && <img className="v2-lineup" src={`./images/${m.colourImg}`} alt={m.name + ' colour range'} loading="lazy" />}
         </div></section>
       )}
 
@@ -309,6 +352,8 @@ function ModelPage({ m }) {
       </div></section>
 
       {m.name.includes('VX2') && <section className="mp-sec" aria-labelledby="g-t"><div className="wrap"><div className="sec-head"><div><p className="eyebrow">Gallery</p><h2 id="g-t" className="display">VX2 on the <span>road</span></h2></div></div><VxGallery /></div></section>}
+      {m.gallery && <section className="mp-sec" aria-labelledby="g2-t"><div className="wrap"><div className="sec-head"><div><p className="eyebrow">Gallery</p><h2 id="g2-t" className="display">{m.name.replace('VIDA ', '')} on the <span>road</span></h2></div></div><VxGallery items={m.gallery} name={m.name} /></div></section>}
+      {m.details && <section className="mp-sec alt" aria-labelledby="g3-t"><div className="wrap"><div className="sec-head"><div><p className="eyebrow">Details</p><h2 id="g3-t" className="display">Up <span>close</span></h2></div></div><VxGallery items={m.details} name={m.name} /></div></section>}
 
       <section className="mp-sec alt" aria-labelledby="b-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">How to buy</p><h2 id="b-t" className="display">In just a few steps</h2></div></div>
@@ -334,15 +379,140 @@ function ModelPage({ m }) {
 
 
 /* ---------- VIDA VX2 extras: proof stats, awards, gallery, BaaS offer ---------- */
-function VxGallery() {
+function VxGallery({ items = VX2_INFO.gallery, name = 'VIDA VX2' }) {
   return (
-    <ul className="vx-gal">{VX2_INFO.gallery.map(([img, t, s]) => (
-      <li key={img}><img src={`./images/${img}`} alt={'VIDA VX2 ' + t + ' – ' + s} loading="lazy" /><span><b>{t}</b>{s}</span></li>
+    <ul className="vx-gal">{items.map(([img, t, s]) => (
+      <li key={img}><img src={`./images/${img}`} alt={name + ' ' + t + ' – ' + s} loading="lazy" /><span><b>{t}</b>{s}</span></li>
     ))}</ul>
+  )
+}
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN')
+function VxSavings({ P }) {
+  const S = P.savings
+  const [km, setKm] = useState(S.def)
+  const petrol = km * 365 / S.petrolKmpl * S.petrolPerL, ev = km * 365 / S.evKmPerUnit * S.unitCost
+  return (
+    <section className="mp-sec alt" id="savings" aria-labelledby="sv-t"><div className="wrap">
+      <div className="sec-head"><div><p className="eyebrow">Savings calculator</p><h2 id="sv-t" className="display">{S.t}</h2></div></div>
+      <div className="sv">
+        <div className="sv-in">
+          <p>{S.s}</p>
+          <h3>Daily distance <span>{km} km</span></h3>
+          <input type="range" min="0" max={S.max} value={km} onChange={e => setKm(+e.target.value)} aria-label="Daily distance in km" style={{ '--v': (km / S.max * 100) + '%' }} />
+          <div className="sv-ends"><span>0 km</span><span>{S.max} km</span></div>
+          <p className="fine"><b>Assumptions:</b> petrol scooter at ₹{S.petrolPerL}/L and {S.petrolKmpl} km/l. Electricity at ₹{S.unitCost}/unit and {S.evKmPerUnit} km/unit.</p>
+        </div>
+        <dl className="sv-out">
+          <div><dt>Annual running cost for a petrol vehicle</dt><dd>{inr(petrol)}</dd></div>
+          <div><dt>Annual running cost for a VIDA VX2</dt><dd>{inr(ev)}</dd></div>
+          <div className="save"><dt>Saved annually</dt><dd>{inr(Math.round(petrol) - Math.round(ev))}</dd></div>
+        </dl>
+      </div>
+    </div></section>
+  )
+}
+function VxColourPick({ P, V }) {
+  const C = P.colourPick
+  const [i, setI] = useState(0)
+  const c = C[i]
+  return (
+    <section className="mp-sec" id="vx-colours" aria-labelledby="vcp-t"><div className="wrap">
+      <div className="sec-head"><div><p className="eyebrow">Colours</p><h2 id="vcp-t" className="display">{P.colourTitle[0]} <span>{P.colourByVariant ? 'VX2 ' + V.name : P.colourTitle[1]}</span></h2></div></div>
+      <div className="vcp-stage">
+        <b className="vcp-name" aria-live="polite">{c.name}</b>
+        {c.image ? <img src={`./images/${c.image}`} alt={'VIDA ' + P.model + ' in ' + c.name} loading="lazy" /> : <div className="vcp-empty" style={{ background: dot(c.name) }} role="img" aria-label={c.name + ' colour swatch'} />}
+      </div>
+      <ul className="vcp-dots" role="tablist" aria-label={P.model + ' colours'}>{C.map((x, k) => <li key={x.name}><button type="button" role="tab" aria-selected={k === i} aria-label={x.name} title={x.name} className={k === i ? 'on' : ''} style={{ background: dot(x.name) }} onClick={() => setI(k)} /></li>)}</ul>
+    </div></section>
+  )
+}
+function VxStory({ P }) {
+  const [v, setV] = useState(0)
+  const V = P.variants[v]
+  return (
+    <>
+      <section className="mp-sec" id={P.id} aria-labelledby="vp-t"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">{P.eyebrow}</p><h2 id="vp-t" className="display">{P.head[0]} <span>{P.head[1]}</span></h2><p className="count">{P.sub}</p></div></div>
+        <div className="vp-tabs" role="tablist" aria-label={P.model + ' variants'}>{P.variants.map((x, i) => <button key={x.name} type="button" role="tab" aria-selected={i === v} className={i === v ? 'on' : ''} onClick={() => setV(i)}>{x.name}{x.tag && <em>{x.tag}</em>}</button>)}</div>
+        <div className="vp-price"><div><h3>Your VX2 {V.name} price in <span>Delhi</span></h3><small>{P.priceNote}</small></div><b>{V.delhi}</b></div>
+        <h3 className="vp-sub">VIDA VX2 {V.name} does it all</h3>
+        <div className="vx-proof vp-stats">{V.stats.map(([l, x]) => <div key={l}><b>{x}</b><span>{l}</span></div>)}</div>
+        <ul className="vp-tags">{P.tags.map(t => <li key={t}>{t}</li>)}</ul>
+      </div></section>
+
+      <section className="mp-sec alt" aria-labelledby="vl-t"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">{P.lifeTitle}</p><h2 id="vl-t" className="display">Roomy. Steady. <span>Ready.</span></h2></div></div>
+        <div className="vp-grid">{P.life.map(([t, s]) => <article className="vb-card" key={t}><h3>{t}</h3><p>{s}</p></article>)}</div>
+      </div></section>
+
+      <section className="mp-sec" aria-labelledby="vc2-t"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">Charging &amp; service</p><h2 id="vc2-t" className="display">{P.powered}</h2></div></div>
+        <div className="vp-grid two">{P.charging.map(c => <article className="vb-card big" key={c.t}><b className="vp-big">{c.big}<i>+</i></b><h3>{c.t}</h3><p>{c.s}</p><a className="more-link" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{c.cta} <Icon n="right" size={14} /></a></article>)}</div>
+        <div className="vp-grid two" style={{ marginTop: 16 }}>{P.homeCharge.map(([t, s]) => <article className="vb-card" key={t}><span className="ico"><Icon n="zap" size={20} /></span><h3>{t}</h3><p>{s}</p></article>)}</div>
+      </div></section>
+
+      <section className="mp-sec alt" aria-labelledby="vs-t"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">My VIDA app</p><h2 id="vs-t" className="display">{P.app.t}</h2><p className="count">{P.app.s}</p></div><div className="head-act"><a className="btn ghost" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{P.app.cta}</a></div></div>
+        <div className="vp-grid">{P.app.stats.map(([t, s]) => <article className="vb-card" key={t}><h3>{t}</h3><p>{s}</p></article>)}</div>
+      </div></section>
+
+      <VxColourPick P={P} V={V} />
+      <section className="mp-sec" aria-labelledby="vv-t"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">{P.model}</p><h2 id="vv-t" className="display">{P.compareHead[0]} <span>{P.compareHead[1]}</span></h2></div></div>
+        <div className="vc-scroll"><table className="vc">
+          <thead><tr><th scope="col"><span className="sr">Feature</span></th>{P.compareCols.map(c => <th scope="col" key={c}>{c}</th>)}</tr></thead>
+          <tbody>
+            {P.compare.slice(0, 10).map(([l, ...vals]) => <tr key={l}><th scope="row">{l}</th>{vals.map((x, k) => <td key={k}>{x}</td>)}</tr>)}
+            <tr><th scope="row">Colours</th>{P.colourRows.map((cols, k) => <td key={k}><ul className="vc-dots">{cols.map(c => <li key={c} title={c} style={{ background: dot(c) }} />)}</ul></td>)}</tr>
+            {P.compare.slice(10).map(([l, ...vals]) => <tr key={l}><th scope="row">{l}</th>{vals.map((x, k) => <td key={k}>{x}</td>)}</tr>)}
+          </tbody>
+        </table></div>
+        <p className="fine">{P.compareNote}</p>
+        <div className="pg-cta" style={{ marginTop: 16 }}><a className="btn ghost" href={P.specsUrl} target="_blank" rel="noreferrer">Download full specifications</a><small>{P.specsNote}</small></div>
+      </div></section>
+      <VxSavings P={P} />
+      <section className="mp-sec" aria-labelledby="va-t"><div className="wrap">
+        <div className="sec-head"><div><p className="eyebrow">{P.model}</p><h2 id="va-t" className="display">Accessories</h2></div><div className="head-act"><a className="btn ghost" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">View all accessories</a></div></div>
+        <div className="vp-grid">{P.accessories.map(([t, s]) => <article className="vb-card" key={t}><h3>{t}</h3><p>{s}</p></article>)}</div>
+      </div></section>
+    </>
+  )
+}
+function VidaCompare() {
+  const C = VIDA_COMPARE
+  const cols = C.picks.map(n => EV.find(x => x.name === n)).filter(Boolean)
+  return (
+    <section className="mp-sec" id="compare" aria-labelledby="vc-t"><div className="wrap">
+      <div className="sec-head"><div><p className="eyebrow">Compare models</p><h2 id="vc-t" className="display">{C.title}</h2></div></div>
+      <div className="vc-scroll"><table className="vc">
+        <thead><tr><th scope="col"><span className="sr">Feature</span></th>{cols.map(m => <th scope="col" key={m.name}>
+          {m.image ? <img src={`./images/${m.image}`} alt="" loading="lazy" /> : null}
+          <a href={`#/ev/${m.slug}`}>{m.cmp.title}</a>
+          <ul className="vc-dots" aria-label="Colours">{m.colours.map(c => <li key={c} title={c} style={{ background: dot(c) }} />)}</ul>
+        </th>)}</tr></thead>
+        <tbody>{C.rows.map(([k, l]) => <tr key={k}><th scope="row">{l}</th>{cols.map(m => <td key={m.name}>{m.cmp[k]}</td>)}</tr>)}</tbody>
+      </table></div>
+      <p className="fine">{C.note}</p>
+    </div></section>
+  )
+}
+function VidaBuy() {
+  const B = VIDA_BUY
+  return (
+    <section className="mp-sec alt" id="buy" aria-labelledby="vb-t"><div className="wrap">
+      <div className="sec-head"><div><p className="eyebrow">{B.eyebrow}</p><h2 id="vb-t" className="display">{B.title[0]} <span>{B.title[1]}</span></h2></div></div>
+      <div className="vb-grid">
+        <article className="vb-card wide"><span className="ico"><Icon n="pin" size={20} /></span><div><h3>{B.dealer.t}</h3><p>{B.dealer.s}</p></div><a className="btn" href="#contact">{B.dealer.cta}</a></article>
+        <article className="vb-card"><span className="ico"><Icon n="card" size={20} /></span><h3>{B.zero.t}</h3><p>{B.zero.s}</p><a className="more-link" href={waLink('Hi West Coast Motors, tell me about VIDA zero down payment finance.')} target="_blank" rel="noreferrer">{B.zero.cta} <Icon n="right" size={14} /></a></article>
+        <article className="vb-card"><span className="ico"><Icon n="box" size={20} /></span><h3>{B.online.t}</h3><p>{B.online.s}</p><small>{B.online.fine}</small><a className="more-link" href={B.url} target="_blank" rel="noreferrer">{B.online.cta} <Icon n="right" size={14} /></a></article>
+      </div>
+      <a className="vb-save" href="#savings"><span aria-hidden="true">{B.save.emoji}</span><b>{B.save.t}</b><Icon n="right" size={22} /></a>
+    </div></section>
   )
 }
 function VxExtras() {
   const I = VX2_INFO, B = I.baas
+  const [story, setStory] = useState('plus')
   return (
     <>
       <section className="mp-sec alt" aria-labelledby="vx-a"><div className="wrap">
@@ -350,6 +520,10 @@ function VxExtras() {
         <div className="vx-proof">{I.proof.map(([v, l]) => <div key={l}><b>{v}</b><span>{l}</span></div>)}</div>
         <ul className="vx-awards">{I.awards.map(([t, w]) => <li key={t}><Icon n="award" size={18} /><div><b>{t}</b><small>{w}</small></div></li>)}</ul>
       </div></section>
+      <section className="mp-sec tabsbar"><div className="wrap"><div className="vp-tabs" role="tablist" aria-label="VIDA VX2 range">{[['plus', 'VX2 Plus'], ['go', 'VX2 Go']].map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={story === k} className={story === k ? 'on' : ''} onClick={() => setStory(k)}>{l}</button>)}</div></div></section>
+      <VxStory key={story} P={story === 'go' ? VX2_GO : VX2_PLUS} />
+      <VidaCompare />
+      <VidaBuy />
       <section className="mp-sec" aria-labelledby="vx-g"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">Ghar Ghar Evooter</p><h2 id="vx-g" className="display">Made for <span>every road</span></h2></div></div>
         <VxGallery />
@@ -357,6 +531,7 @@ function VxExtras() {
       <section className="vx-baas" aria-labelledby="vx-b" style={{ backgroundImage: `linear-gradient(90deg,rgba(6,25,46,.92),rgba(6,25,46,.35)),url(./images/vx2-duo.jpg)` }}><div className="wrap">
         <p className="eyebrow">VIDA BaaS · Battery as a Service</p>
         <h2 id="vx-b" className="display">Starting @ just <span>{B.from}</span></h2>
+        <p className="vx-big">{B.copy}</p>
         <p className="vx-big">With BaaS @ just <b>{B.with}</b> &amp; per km cost <b>{B.perKm}</b></p>
         <p className="fine light">{B.note}</p>
         <div className="pg-cta"><a className="btn" href={waLink('Hi West Coast Motors, tell me about VIDA BaaS offer.')} target="_blank" rel="noreferrer">Ask about BaaS</a></div>
@@ -376,7 +551,8 @@ function RidePage({ kind, go }) {
   const R = n => ({ '--d': n })
   return (
     <div className={'page ' + kind}>
-      <section className="pg-hero" aria-labelledby="pg-t">
+      <section className={'pg-hero' + (d.videos ? ' has-vid' : '')} aria-labelledby="pg-t">
+        {d.videos && <><PetrolReel items={d.videos} className="pg-bg" /><div className="pg-shade" aria-hidden="true" /></>}
         <div className="wrap">
           <div className="pg-copy">
             <div className="crumb rise" style={R(0)}><a href="#/">Home</a> / {d.chip}</div>
@@ -389,7 +565,7 @@ function RidePage({ kind, go }) {
             </div>
             <div className="switch-row rise" style={R(5)}><span>{ev ? 'Looking for petrol?' : 'Looking for electric?'}</span><RideSwitch mode={sw} onChoose={swChoose} className="inline" /></div>
           </div>
-          <div className="art pg-art rise" style={R(3)}>{d.image ? <img src={`./images/${d.image}`} alt="" /> : d.note}</div>
+          {!d.videos && <div className="art pg-art rise" style={R(3)}>{d.image ? <img src={`./images/${d.image}`} alt="" /> : d.note}</div>}
         </div>
       </section>
 
@@ -493,9 +669,9 @@ export default function App() {
   const busy = useRef(false)
   const kind = route.split('/')[0], slug = route.split('/')[1]
   const model = slug ? (kind === 'ev' ? EV : PETROL).find(x => x.slug === slug) : null
-  useEffect(() => { document.title = model ? `${model.name} | ${model.kind} | West Coast Motors` : TITLES[kind] }, [route])
+  useEffect(() => { document.title = model ? (BIKES[model.slug] && kind === 'petrol' ? `${model.name} | Hero Motorcycle | West Coast Motors, Mangalore` : `${model.name} | ${model.kind} | West Coast Motors`) : TITLES[kind] }, [route])
   useEffect(() => {
-    const pop = () => { setRoute(parseRoute()); window.scrollTo({ top: 0, behavior: 'instant' }) }
+    const pop = () => { if (location.hash && !location.hash.startsWith('#/')) return; setRoute(parseRoute()); window.scrollTo({ top: 0, behavior: 'instant' }) }
     addEventListener('popstate', pop); return () => removeEventListener('popstate', pop)
   }, [])
   const navigate = useCallback((to, after) => {
@@ -525,7 +701,9 @@ export default function App() {
       if (href.startsWith('#/') || ROUTE_RE.test(r)) { e.preventDefault(); navigate(ROUTE_RE.test(r) ? r : 'home'); return }
       const id = href.slice(1)
       if (id === 'top') { e.preventDefault(); navigate('home'); return }
-      if (!document.getElementById(id)) { e.preventDefault(); navigate('home', id) }
+      const el = document.getElementById(id)
+      if (el) { e.preventDefault(); el.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' }); return }  // in-page anchor: scroll only, keep route
+      e.preventDefault(); navigate('home', id)
     }
     document.addEventListener('click', h); return () => document.removeEventListener('click', h)
   }, [navigate])
@@ -536,7 +714,7 @@ export default function App() {
       <div id="top" ref={mainRef}>
         <Header route={route.split('/')[0]} /><main>
           {kind === 'home' && <><Hero /><Quick /><RideSelector go={navigate} /><More /><Ride /></>}
-          {kind !== 'home' && (model ? <ModelPage key={route} m={model} /> : <RidePage key={kind} kind={kind} go={navigate} />)}
+          {kind !== 'home' && (model ? (BIKES[model.slug] && kind === 'petrol' ? <BikePage key={route} d={BIKES[model.slug].d} start={BIKES[model.slug].start} /> : <ModelPage key={route} m={model} />) : <RidePage key={kind} kind={kind} go={navigate} />)}
         </main><Footer />
       </div>
     )}

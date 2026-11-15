@@ -54,3 +54,11 @@ Put photos in `public/images/` and set `image: 'filename.png'`.
 - **Fully filled so far:** Glamour X ABS (from Hero's official page: features, colours, full spec sheet, brochure) and all 7 VIDA EVs (features, colours, grouped specs from vidaworld.com).
 - **Other petrol models** have engine, torque, cooling, and engine type only. To fill one, copy the pattern from `Glamour X ABS` in `src/data.js`: `stats`, `highlights`, `features: [[title, text]]`, `colours: []`, `brochure`, and `full: { Group: { Label: value } }`. Hero's own pages list specs in the same groups (Engine, Wheels & Tyres, Suspension, Chassis, Dimensions, Electricals).
 - Feature text is written in our own words. Photos and Hero's videos/images are not copied; add your own via `image:`.
+
+## Motorcycle detail pages (new)
+One reusable template renders every motorcycle page: `src/bike/BikePage.jsx` (+ `bike.css`).
+Model content lives in one file per bike: `src/bike/data/<slug>.js`, registered in `src/bike/data/index.js`.
+Done so far: **Xtreme 160R 4V** and the **Splendor+ family** (Splendor+, XTEC, XTEC 2.0 on one page with model tabs). Each page picks its own blocks via `layout` in its data file. Bikes without a data file still use the older simple page.
+Photos: drop files in `public/images/<slug>/` and put the file names in the data file (hero, overview, features, colour images).
+Anything Hero did not publish (price, variant prices, mileage, accessories) is left empty on purpose.
+Block library (in `BikePage.jsx`): hero, offers, quick, highlights, overview, features, colours, variants, compare, specs, finance (with EMI estimator), steps, accessories, testride, faq, related. Add a new block there, then list it in a bike's `layout`.
