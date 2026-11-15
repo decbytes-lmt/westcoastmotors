@@ -599,3 +599,10 @@ footer .copy{font-weight:300;letter-spacing:.02em}
 .foot-logo{display:inline-block;background:#fff;border-radius:12px;padding:8px 16px;margin-bottom:14px}
 .foot-logo .wcm-crop{--h:84px}
 @media (max-width:640px){.dealer .wcm-crop{--h:42px}.dealer{padding-left:10px}}
+
+/* mobile: splash must match the real visible screen and stay centered */
+html{overflow-x:hidden}
+.splash{top:0;left:0;right:0;bottom:0;width:100%;height:100vh;height:100dvh;max-width:100vw;overflow:hidden}
+.splash-in{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 16px;box-sizing:border-box}
+.splash-hero{display:flex;justify-content:center}
+.splash-wcm{max-width:calc(100vw - 48px)}
