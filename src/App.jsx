@@ -65,10 +65,11 @@ function Intro({ stage, setStage }) {
 }
 
 import BikePage from './bike/BikePage.jsx'
+import { Sales, Services, About } from './sections/Sections.jsx'
 import { BIKES } from './bike/data/index.js'
 
 /* ---------- Site ---------- */
-const NAV = [['Home', '#/', 'home'], ['Petrol', '#/petrol', 'petrol'], ['EV', '#/ev', 'ev'], ['Services', '#services'], ['About Us', '#about'], ['Contact', '#contact']]
+const NAV = [['Home', '#/', 'home'], ['Petrol', '#/petrol', 'petrol'], ['EV', '#/ev', 'ev'], ['Sales', '#sales'], ['Services', '#services'], ['About Us', '#about'], ['Contact', '#contact']]
 const testRide = (m) => waLink(m ? `Hi West Coast Motors, I want to book a test ride for ${m}.` : 'Hi West Coast Motors, I want to book a test ride.')
 
 function Header({ route }) {
@@ -139,7 +140,7 @@ function Hero() {
 }
 
 function Quick() {
-  const items = [['bike', 'Explore Petrol', '#/petrol'], ['zap', 'Explore EV', '#/ev'], ['calendar', 'Book a Test Ride', testRide()], ['tool', 'Service Booking', '#services'], ['shield', 'Finance & Insurance', '#services'], ['pin', 'Visit Showroom', '#contact']]
+  const items = [['bike', 'Explore Petrol', '#/petrol'], ['zap', 'Explore EV', '#/ev'], ['calendar', 'Book a Test Ride', testRide()], ['tool', 'Service Booking', '#services'], ['shield', 'Finance & Insurance', '#insurance'], ['pin', 'Visit Showroom', '#contact']]
   return <nav className="quick" aria-label="Quick links"><div className="wrap">{items.map(([ic, l, h]) => <a key={l} href={h} {...(h.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}><span className="ico"><Icon n={ic} size={18} /></span>{l}</a>)}</div></nav>
 }
 
@@ -613,19 +614,9 @@ function Curtain({ t }) {
   )
 }
 
-function More() {
-  const items = [['box', 'Genuine Spare Parts'], ['shield', 'Insurance Assistance'], ['card', 'Easy Financing'], ['clock', 'Express Service'], ['phones', 'Dedicated Support']]
-  return (
-    <section className="more" id="services"><div className="wrap">
-      <div className="lead"><span className="display">More Than Just<br />A Dealership</span><small>Your complete two-wheeler destination</small></div>
-      {items.map(([ic, l]) => <div className="item" key={l}><span className="ico"><Icon n={ic} size={18} /></span>{l}</div>)}
-    </div></section>
-  )
-}
-
 function Ride() {
   return (
-    <section className="ride" id="about"><div className="wrap">
+    <section className="ride" aria-label="Visit our showroom"><div className="wrap">
       <div><h3 className="display">Ride the <em>Hero</em> Way</h3><p>Performance. Trust. Togetherness.</p></div>
       <a className="btn" href="#contact">Visit Our Showroom</a>
     </div></section>
@@ -637,8 +628,8 @@ function Footer() {
     <footer id="contact">
       <div className="wrap">
         <div><div className="foot-logo"><WcmLogo /></div><p>Authorised Hero MotoCorp dealer.<br />{SITE.address}</p></div>
-        <div><h4>Explore</h4><ul><li><a href="#/petrol">Petrol</a></li><li><a href="#/ev">EV</a></li><li><a href="#about">About Us</a></li></ul></div>
-        <div><h4>Services</h4><ul><li><a href={testRide()} target="_blank" rel="noreferrer">Test Ride</a></li><li><a href="#services">Service Booking</a></li><li><a href="#services">Finance &amp; Insurance</a></li></ul></div>
+        <div><h4>Explore</h4><ul><li><a href="#/petrol">Petrol</a></li><li><a href="#/ev">EV</a></li><li><a href="#sales">Sales</a></li><li><a href="#about">About Us</a></li></ul></div>
+        <div><h4>Services</h4><ul><li><a href={testRide()} target="_blank" rel="noreferrer">Test Ride</a></li><li><a href="#services">Service Booking</a></li><li><a href="#insurance">Insurance</a></li><li><a href="#staff">Our Team</a></li></ul></div>
         <div><h4>Contact</h4><ul><li><a href={`tel:${SITE.salesTel}`}>Sales: {SITE.salesPhone}</a></li><li><a href={`tel:${SITE.serviceTel}`}>Service: {SITE.servicePhone}</a></li><li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li></ul></div>
       </div>
       <div className="copy">&copy; {new Date().getFullYear()} {SITE.name}. Hero and VIDA are trademarks of Hero MotoCorp Ltd.</div>
@@ -715,7 +706,7 @@ export default function App() {
     {(
       <div id="top" ref={mainRef}>
         <Header route={route.split('/')[0]} /><main>
-          {kind === 'home' && <><Hero /><Quick /><RideSelector go={navigate} /><More /><Ride /></>}
+          {kind === 'home' && <><Hero /><Quick /><RideSelector go={navigate} /><Sales Icon={Icon} /><Services /><About /><Ride /></>}
           {kind !== 'home' && (model ? (BIKES[model.slug] && kind === 'petrol' ? <BikePage key={route} d={BIKES[model.slug].d} start={BIKES[model.slug].start} /> : <ModelPage key={route} m={model} />) : <RidePage key={kind} kind={kind} go={navigate} />)}
         </main><Footer />
       </div>

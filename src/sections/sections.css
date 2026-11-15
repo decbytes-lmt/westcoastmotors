@@ -1,0 +1,53 @@
+/* Home page sections: Sales (+Insurance), Services, About (+Staff). Uses the site's tokens. */
+.hs{padding:clamp(56px,8vw,104px) 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hs-head{max-width:720px;margin-bottom:34px}
+.hs-eyebrow{margin:0 0 10px;font:700 13px/1 var(--f-label);letter-spacing:.22em;text-transform:uppercase;color:var(--red)}
+.hs-head h2{margin:0 0 12px;font-size:clamp(32px,5vw,56px);line-height:1.02;text-transform:uppercase}.hs-head h2 span{color:var(--red)}
+.hs-intro{margin:0;font-size:17px;line-height:1.6;color:var(--muted,#5a6775);max-width:60ch}.hs-head.light .hs-intro{color:#c3cfdf}
+.hs-fine{font-size:12.5px;color:var(--muted,#5a6775);margin:10px 0 0}
+.hs-ico{width:46px;height:46px;border-radius:12px;background:var(--navy);color:#fff;display:inline-grid;place-items:center;flex:none}.hs-ico.big{width:60px;height:60px;border-radius:14px;background:var(--red);margin-bottom:18px}
+.hs-link{display:inline-flex;gap:6px;align-items:center;font-weight:700;font-size:14px;color:var(--navy);min-height:36px;margin-top:auto}.hs-link i{font-style:normal;transition:transform .2s}.hs-link:hover{color:var(--red)}.hs-link:hover i{transform:translateX(4px)}
+
+/* sales */
+.hs-sales{background:#fff;color:var(--navy)}
+.hs-cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:18px}
+.hs-cards li{display:flex;flex-direction:column;gap:10px;padding:26px;background:#f3f5f8;border-top:4px solid var(--red);transition:transform .25s,box-shadow .25s}
+.hs-cards li:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(11,42,74,.14)}
+.hs-cards h3{margin:6px 0 0;font:700 21px/1.2 var(--f-label);text-transform:uppercase;letter-spacing:.03em}.hs-cards p{margin:0;color:#4b5a6a;font-size:15px;line-height:1.55}
+.hs-steps{list-style:none;margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:0;border:1px solid #dfe3e8}
+.hs-steps li{padding:18px 20px;display:grid;gap:2px;border-left:1px solid #dfe3e8;position:relative}.hs-steps li:first-child{border-left:0}
+.hs-steps span{font:800 30px/1 var(--f-label);font-style:italic;color:var(--red)}.hs-steps em{font:700 11px var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#6b7785;font-style:normal}.hs-steps b{font-size:15px}
+.hs-ins{margin-top:48px;display:grid;grid-template-columns:1.1fr 1fr;gap:0;background:var(--navy);color:#fff;clip-path:polygon(0 0,100% 0,100% calc(100% - 26px),calc(100% - 26px) 100%,0 100%)}
+.hs-ins-l{padding:clamp(26px,4vw,48px);display:grid;gap:10px;justify-items:start;align-content:start}
+.hs-ins-l .hs-eyebrow{margin:0;color:#ff9aa0}.hs-ins-l h3{margin:0;font-size:clamp(26px,3.4vw,38px);line-height:1.08}.hs-ins-l p{margin:0;color:#c3cfdf;line-height:1.6}.hs-ins-l .btn{margin-top:8px}.hs-partners{font-size:14px}
+.hs-ins-r{list-style:none;margin:0;padding:clamp(26px,4vw,48px);display:grid;gap:0;align-content:center;background:rgba(255,255,255,.06)}
+.hs-ins-r li{display:grid;gap:4px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.14)}.hs-ins-r li:last-child{border:0}.hs-ins-r b{font:700 19px var(--f-label);letter-spacing:.05em;text-transform:uppercase}.hs-ins-r span{color:#c3cfdf;font-size:15px;line-height:1.5}
+
+/* services */
+.hs-services{background:linear-gradient(180deg,var(--navy-2),var(--navy));color:#fff}
+.hs-tiles{list-style:none;margin:0 0 30px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px}
+.hs-tiles li{padding:26px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);display:grid;gap:8px;align-content:start;transition:border-color .25s,transform .25s}
+.hs-tiles li:hover{border-color:var(--red);transform:translateY(-4px)}.hs-tiles .hs-ico{background:var(--red);margin-bottom:6px}
+.hs-tiles h4{margin:0;font:700 21px var(--f-label);letter-spacing:.04em;text-transform:uppercase}.hs-tiles p{margin:0;color:#c3cfdf;font-size:15px;line-height:1.55}
+
+/* about + staff */
+.hs-about{background:#fff;color:var(--navy)}
+.hs-about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.hs-body{font-size:17px;line-height:1.7;color:#4b5a6a;max-width:60ch;margin:0 0 14px}
+.hs-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:18px;margin:26px 0 0}.hs-facts dt{font:800 36px/1 var(--f-label);color:var(--red)}.hs-facts dd{margin:4px 0 0;font-size:13px;color:#5a6775}
+.hs-photo{aspect-ratio:4/3;overflow:hidden;clip-path:polygon(0 0,100% 0,100% calc(100% - 28px),calc(100% - 28px) 100%,0 100%);background:#0d1118}
+.hs-photo img{width:100%;height:100%;object-fit:cover}.hs-photo>div{width:100%;height:100%;display:grid;place-content:center;gap:6px;text-align:center;padding:18px;color:#8fa0b5;background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 14px,transparent 14px 28px),linear-gradient(160deg,#101a2b,#070b12)}
+.hs-photo span{font:700 18px var(--f-label);letter-spacing:.1em;text-transform:uppercase;color:#cfd8e6}.hs-photo small{font-size:11px}
+.hs-staff{margin-top:64px;padding-top:44px;border-top:1px solid #dfe3e8}
+.hs-staff h3{margin:0 0 8px;font-size:clamp(26px,3.6vw,40px);text-transform:uppercase}
+.hs-staff ul{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:22px}
+.hs-staff li{display:grid;gap:3px;justify-items:center;text-align:center;padding:24px 14px;background:#f3f5f8;transition:transform .25s}.hs-staff li:hover{transform:translateY(-4px)}
+.hs-staff .av{width:96px;height:96px;border-radius:50%;overflow:hidden;background:var(--navy);color:#fff;display:grid;place-items:center;font:800 32px var(--f-label);margin-bottom:10px;border:3px solid #fff;box-shadow:0 0 0 2px var(--red)}.hs-staff .av img{width:100%;height:100%;object-fit:cover}
+.hs-staff b{font-size:17px}.hs-staff li>span{font-size:13px;color:#5a6775;letter-spacing:.04em}.hs-staff a{margin-top:6px;font-weight:700;font-size:14px;color:var(--navy)}.hs-staff a:hover{color:var(--red)}
+
+@media (max-width:860px){.hs-ins,.hs-about-grid{grid-template-columns:1fr}.hs-steps li{border-left:0;border-top:1px solid #dfe3e8}.hs-steps li:first-child{border-top:0}}
+@media (prefers-reduced-motion:reduce){.hs *{transition:none!important}}
+
+.hs-svc-text p{margin:0 0 14px;font-size:18px;line-height:1.7;color:#c3cfdf;max-width:68ch}
+.hs-ins:only-child{grid-template-columns:1fr}.hs-ins-l:only-child{max-width:760px}

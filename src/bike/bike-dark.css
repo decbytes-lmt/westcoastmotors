@@ -1,0 +1,74 @@
+/* West Coast Motors house style for bike pages: black theme + motion. Loaded after bike.css. Content is unchanged. */
+.bp{--bg:#05070a;--bg2:#0b0f15;--tx:#eef2f7;--tm:#98a5b6;--tl:rgba(255,255,255,.11);--k:#030406;--nv:#0f1722;--nv2:#05080d;--glow:rgba(225,22,31,.35);
+  background:radial-gradient(1200px 600px at 85% -10%,rgba(225,22,31,.10),transparent 60%),var(--bg);animation:wcmPage .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes wcmPage{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.bp-sec{position:relative}
+.bp-sec.alt{background:linear-gradient(180deg,#080b11,#0b0f15)}
+.bp-sec.dark{background:linear-gradient(180deg,#05070a,#0a0e15 60%,#05070a)}
+.bp-sec+.bp-sec::before{content:"";position:absolute;top:0;left:50%;width:min(1200px,92%);height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(225,22,31,.55),transparent)}
+.bp-h2{background:linear-gradient(180deg,#fff,#b9c3d1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bp-h2 em{-webkit-text-fill-color:var(--rd);color:var(--rd)}
+.bp-eyebrow{display:flex;align-items:center;gap:12px}.bp-eyebrow::before{content:"";width:34px;height:2px;background:var(--rd);box-shadow:0 0 12px var(--glow)}
+.bp-lead,.bp-fine{color:var(--tm)}
+
+/* dark surfaces that were white */
+.bp-colgrp button,.bp-var,.bp-rel li,.bp-steps li,.bp-form,.bp-tbl,.fld input,.fld select{background:#0d121a;color:var(--tx)}
+.bp-var,.bp-colgrp button,.bp-rel li,.bp-form{border-color:var(--tl)}
+.bp-var:hover,.bp-colgrp button:hover{border-color:rgba(255,255,255,.5)}
+.bp-var.on{box-shadow:0 0 0 1px var(--rd),0 16px 40px rgba(225,22,31,.2)}
+.fld input,.fld select{border-color:rgba(255,255,255,.18)}.fld input::placeholder{color:#6b7787}
+.bp-form{box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.bp-tbl thead th{background:#141c28}.bp-tbl td{color:var(--tx)}
+.bp-ok{background:rgba(22,163,74,.12);color:#b8f1c9}.bp-ok small{color:#8fd1a6}
+.bp-ov-img .small{border-color:var(--bg)}
+.bp-hl li:hover{background:rgba(255,255,255,.04)}
+.bp-rel li:hover,.bp-feat:hover,.bp-var:hover{box-shadow:0 18px 44px rgba(225,22,31,.18)}
+.bp-spec-tabs button.on{background:rgba(255,255,255,.05)}
+.bp-items p,.bp-faq p{color:var(--tm)}
+.bp-gal li{background:#0a0e14}
+
+/* hero motion */
+.bp-hero-bg{animation:wcmZoom 22s ease-in-out infinite alternate;transform-origin:60% 50%}
+@keyframes wcmZoom{from{transform:scale(1.02)}to{transform:scale(1.12)}}
+.bp-hero-bike{animation:wcmBike 1s cubic-bezier(.2,.8,.2,1) .15s both}
+@keyframes wcmBike{from{opacity:0;transform:translateX(80px) scale(.96)}to{opacity:1;transform:none}}
+.bp-hero-in>*,.bp-hero-grid>*{animation:wcmUp .8s cubic-bezier(.2,.8,.2,1) both}
+.bp-hero-in>*:nth-child(1){animation-delay:.05s}.bp-hero-in>*:nth-child(2){animation-delay:.15s}.bp-hero-in>*:nth-child(3){animation-delay:.25s}
+.bp-hero-in>*:nth-child(4){animation-delay:.35s}.bp-hero-in>*:nth-child(5){animation-delay:.45s}.bp-hero-in>*:nth-child(6){animation-delay:.55s}
+.bp-h1{text-shadow:0 8px 40px rgba(0,0,0,.6)}
+@keyframes wcmUp{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.bp-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:140px;background:linear-gradient(180deg,transparent,var(--bg));pointer-events:none;z-index:0}
+
+/* scroll progress */
+.bp-progress{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,#e1161f,#ff6a3d);box-shadow:0 0 14px var(--glow);z-index:9999;pointer-events:none}
+
+/* reveal: slide from side for alternating items */
+[data-rv]{transition-duration:.8s}
+.bp-sec .bp-h2[data-rv]{transform:translateX(-36px)}
+.bp-sec .bp-h2[data-rv].in{transform:none}
+.bp-sec .bp-eyebrow[data-rv]{transform:translateX(-20px)}.bp-sec .bp-eyebrow[data-rv].in{transform:none}
+
+/* features: horizontal slider */
+.bp-rail{position:relative}
+.bp-feats{display:flex!important;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:8px 2px 26px;scrollbar-width:thin;scrollbar-color:var(--rd) transparent;-webkit-overflow-scrolling:touch}
+.bp-feats::-webkit-scrollbar{height:6px}.bp-feats::-webkit-scrollbar-thumb{background:var(--rd)}.bp-feats::-webkit-scrollbar-track{background:rgba(255,255,255,.06)}
+.bp-feat{flex:0 0 min(86%,360px);scroll-snap-align:start;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));display:flex;flex-direction:column}
+.bp-feat>div:last-child{flex:1}
+.bp-rail-nav{display:flex;gap:10px;justify-content:flex-end;margin:-6px 0 14px}
+.bp-rail-nav button{width:48px;height:48px;border:1px solid var(--ln);background:rgba(255,255,255,.04);color:#fff;font-size:22px;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.bp-rail-nav button:hover{background:var(--rd);border-color:var(--rd);transform:translateY(-2px)}
+@media(max-width:640px){.bp-rail-nav{display:none}}
+
+/* gallery: hover lift */
+.bp-gal li{transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}.bp-gal li:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.6)}
+/* quick stats glow */
+.bp-quick b{text-shadow:0 0 24px rgba(225,22,31,.35)}
+@media (prefers-reduced-motion:reduce){.bp,.bp-hero-bg,.bp-hero-bike,.bp-hero-in>*,.bp-hero-grid>*{animation:none!important}.bp-feats{scroll-behavior:auto}}
+.bp-sec{scroll-margin-top:110px}.bp [id]{scroll-margin-top:110px}.page .card .img img,.pcard .img img{object-fit:cover}
+
+/* whole bike always visible: never crop wheels */
+.stage .bp-photo,.stage .bp-ph{object-fit:contain;padding:4%}
+.bp-hero-bike{object-fit:contain;object-position:right bottom;right:max(3vw,24px)!important;width:min(52vw,760px)}
+.bp-banner{padding:0;background:#000}.bp-banner .wrap{max-width:1360px}
+.bp-banner figure{margin:0;overflow:hidden;position:relative}.bp-banner img{display:block;width:100%;height:auto;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.bp-banner figure:hover img{transform:scale(1.03)}

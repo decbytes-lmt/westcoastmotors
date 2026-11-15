@@ -1,23 +1,50 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PETROL, SITE, waLink } from '../data.js'
 import './bike.css'
+import './bike-dark.css'
 
 /* Reusable motorcycle detail page. Feed it one object from ./data/. Nothing model-specific lives in here. */
 const IMG = slug => f => `./images/${slug}/${f}`
 
 function Photo({ d, file, label, className = '' }) {
   return file
-    ? <img className={'bp-photo ' + className} src={IMG(d.slug)(file)} alt={label} loading="lazy" />
-    : <div className={'bp-ph ' + className} role="img" aria-label={label + ' (photo to be added)'}><span>{label}</span><small>Add photo to public/images/{d.slug}/</small></div>
+    ? <img className={'bp-photo ' + className} src={IMG(d.folder || d.slug)(file)} alt={label} loading="lazy" />
+    : <div className={'bp-ph ' + className} role="img" aria-label={label + ' (photo to be added)'}><span>{label}</span><small>Photo coming soon</small></div>
+}
+
+// The site uses HashRouter, so a plain href="#section" would change the route and send the visitor home. Scroll instead.
+function onAnchor(e) {
+  const a = e.target.closest && e.target.closest('a[href^="#"]')
+  if (!a) return
+  const h = a.getAttribute('href')
+  if (h.startsWith('#/') || h === '#') return
+  const el = document.getElementById(h.slice(1))
+  if (!el) return
+  e.preventDefault()
+  el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+}
+
+function railGo(e, dir) {
+  const r = e.currentTarget.closest('.wrap').querySelector('.bp-feats')
+  if (r) r.scrollBy({ left: dir * Math.min(r.clientWidth * 0.9, 760), behavior: 'smooth' })
+}
+
+function useProgress() {
+  useEffect(() => {
+    const bar = document.querySelector('.bp-progress')
+    const on = () => { const h = document.documentElement.scrollHeight - innerHeight; if (bar) bar.style.setProperty('--p', h > 0 ? Math.min(1, scrollY / h) : 0) }
+    on(); addEventListener('scroll', on, { passive: true }); return () => removeEventListener('scroll', on)
+  }, [])
 }
 
 function useReveal(dep) {
   useEffect(() => {
+    document.querySelectorAll('.bp-sec .bp-h2,.bp-sec .bp-eyebrow,.bp-sec .bp-lead').forEach(e => e.setAttribute('data-rv', ''))
     const els = [...document.querySelectorAll('.bp [data-rv]')]
     if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach(e => e.classList.add('in')); return }
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } }), { rootMargin: '0px 0px -8% 0px' })
     els.forEach(e => io.observe(e)); return () => io.disconnect()
-  }, [dep])
+  })
 }
 
 export default function BikePage({ d: base, start }) {
@@ -31,6 +58,7 @@ export default function BikePage({ d: base, start }) {
   const cols = coloursOf(variant)
   const [colName, setColName] = useState(cols[0] ? cols[0].name : '')
   const colour = cols.find(c => c.name === colName) || cols[0] || null
+  const pic = (colour && colour.image) || variant.image || null
   const featCats = Array.isArray(d.features) ? [] : Object.keys(d.features || {})
   const [cat, setCat] = useState(featCats[0])
   const [spec, setSpec] = useState(Object.keys(d.specs)[0])
@@ -43,7 +71,8 @@ export default function BikePage({ d: base, start }) {
     setCat(Array.isArray(d.features) ? undefined : Object.keys(d.features || {})[0]); setSpec(Object.keys(d.specs)[0])
   }, [mid])
   const pickVariant = id => { setVid(id); const c = coloursOf(d.variants.find(v => v.id === id)); setColName(c[0] ? c[0].name : '') }
-  useReveal(cat + mid)
+  useReveal()
+  useProgress()
 
   useEffect(() => {
     let mt = document.querySelector('meta[name="description"]'); if (!mt) { mt = document.createElement('meta'); mt.name = 'description'; document.head.appendChild(mt) }
@@ -63,6 +92,7 @@ export default function BikePage({ d: base, start }) {
     hero: () => (
       <section key="hero" className="bp-hero" aria-labelledby="bp-h1">
         <Photo d={d} file={d.hero && d.hero.image} label={d.name + ' hero image'} className="bp-hero-bg" />
+        {!(d.hero && d.hero.image) && (d.hero && d.hero.bike || pic) && <img className="bp-hero-bike" key={(d.hero && d.hero.bike) || pic} src={IMG(d.folder || d.slug)((d.hero && d.hero.bike) || pic)} alt={`${d.name}${colour ? ' in ' + colour.name : ''}`} />}
         <div className="bp-hero-shade" />
         <div className="wrap bp-hero-in">
           <nav className="bp-crumb" aria-label="Breadcrumb"><a href="#/">Home</a><i>/</i><a href="#/petrol">Motorcycles</a><i>/</i><span>{d.name}</span></nav>
@@ -113,10 +143,11 @@ export default function BikePage({ d: base, start }) {
         <p className="bp-eyebrow">Key features</p>
         <h2 className="bp-h2">{d.featuresTitle || 'Discover what makes it special'}</h2>
         {!flatFeatures && <div className="bp-tabs" role="tablist" aria-label="Feature categories">{featCats.map(c => <button key={c} role="tab" aria-selected={c === cat} className={c === cat ? 'on' : ''} onClick={() => setCat(c)}>{c}</button>)}</div>}
+        <div className="bp-rail-nav" aria-hidden="true"><button type="button" tabIndex={-1} onClick={e => railGo(e, -1)}>‹</button><button type="button" tabIndex={-1} onClick={e => railGo(e, 1)}>›</button></div>
         <div className="bp-feats" role="tabpanel" key={cat + mid}>
           {(flatFeatures ? d.features : d.features[cat] || []).map((f, i) => (
             <article key={f.title} className="bp-feat" style={{ '--i': i }}>
-              <Photo d={d} file={f.image} label={f.title} className="feat" />
+              {f.image && <Photo d={d} file={f.image} label={f.title} className="feat" />}
               <div><span className="n">{String(i + 1).padStart(2, '0')}</span><h3>{f.title}</h3>{f.text && <p>{f.text}</p>}</div>
             </article>
           ))}
@@ -125,7 +156,7 @@ export default function BikePage({ d: base, start }) {
     ),
     colours: () => (
       <section key="colours" className="bp-sec" id="colours"><div className="wrap bp-col">
-        <div className="bp-col-stage" data-rv><div className="stage" style={{ '--c': colour ? colour.hex : '#334155' }}><Photo d={d} file={colour && colour.image} label={colour ? `${d.name} in ${colour.name}` : d.name} /></div></div>
+        <div className="bp-col-stage" data-rv><div className="stage" style={{ '--c': colour ? colour.hex : '#334155' }}><Photo d={d} file={pic} label={colour ? `${d.name} in ${colour.name}` : d.name} /></div></div>
         <div data-rv>
           <p className="bp-eyebrow">Design and colour</p><h2 className="bp-h2">Pick your <em>colour</em></h2>
           {cols.length ? d.variants.map(v => coloursOf(v).length > 0 && (
@@ -191,7 +222,7 @@ export default function BikePage({ d: base, start }) {
         </div>
         <div className="bp-emi" data-rv>
           <h3>EMI enquiry</h3>
-          {d.finance && <><ul>{d.finance.promo.map(p => <li key={p}>{p}</li>)}</ul><p className="bp-fine light">{d.finance.promoNote}</p></>}
+          {d.finance && d.finance.promo && d.finance.promo.length > 0 && <><ul>{d.finance.promo.map(p => <li key={p}>{p}</li>)}</ul>{d.finance.promoNote && <p className="bp-fine light">{d.finance.promoNote}</p>}</>}
           <Emi />
           <a className="bp-btn" href={waLink(`Hi West Coast Motors, I need EMI / finance details for ${d.name} (${variant.name}).`)} target="_blank" rel="noreferrer">Get finance assistance</a>
         </div>
@@ -200,14 +231,14 @@ export default function BikePage({ d: base, start }) {
     steps: () => (
       <section key="steps" className="bp-sec alt" aria-labelledby="stp"><div className="wrap">
         <p className="bp-eyebrow">How to buy</p><h2 id="stp" className="bp-h2">In just a few <em>steps</em></h2>
-        <ol className="bp-steps">{[['Book your two-wheeler', 'Enquire online or call us.'], ['Visit the showroom', 'See it, sit on it, ask us anything.'], ['Submit documents', 'We help with paperwork and finance.'], ['Pick up your bike', 'Ride home from West Coast Motors.']].map(([t, s], i) => <li key={t} data-rv style={{ '--i': i }}><span>{i + 1}</span><b>{t}</b><small>{s}</small></li>)}</ol>
-        <p className="bp-fine">Hero MotoCorp indicates roughly 15 days from booking to pick-up. Timing depends on stock and documents.</p>
+        <ol className="bp-steps">{[['Day 1', 'Book your two-wheeler', 'Book online or call us. Quick and convenient.'], ['Day 2–7', 'Visit the showroom', 'See it first-hand and get expert guidance.'], ['Day 8–12', 'Submit documents', 'Paperwork is simple. Submit documents at the showroom.'], ['Day 13–15', 'Pick up your bike', 'Time to ride. Collect it from West Coast Motors.']].map(([day, t, s], i) => <li key={t} data-rv style={{ '--i': i }}><span>{i + 1}</span><em>{day}</em><b>{t}</b><small>{s}</small></li>)}</ol>
+        <p className="bp-fine">Timeline as indicated by Hero MotoCorp. Actual timing depends on stock and documents.</p>
       </div></section>
     ),
     accessories: () => (
       <section key="accessories" className="bp-sec" id="accessories"><div className="wrap">
         <p className="bp-eyebrow">Accessories</p><h2 className="bp-h2">Make it <em>yours</em></h2>
-        {d.accessories && d.accessories.length ? <ul className="bp-acc">{d.accessories.map(a => <li key={a.name}><Photo d={d} file={a.image} label={a.name} /><b>{a.name}</b><p>{a.description}</p></li>)}</ul>
+        {d.accessories && d.accessories.length ? <ul className="bp-acc">{d.accessories.map(a => <li key={a.name}><Photo d={d} file={a.image} label={a.name} /><b>{a.name}</b>{a.description && <p>{a.description}</p>}{a.part && <small className="part">Part no. {a.part}</small>}</li>)}</ul>
           : <div className="bp-empty"><b>Accessory list coming soon</b><p>Ask our showroom team which genuine accessories are available for this model.</p>
             <a className="bp-btn ghost sm" href={waLink(`Hi West Coast Motors, which genuine accessories are available for ${d.name}?`)} target="_blank" rel="noreferrer">Ask about accessories</a></div>}
       </div></section>
@@ -226,6 +257,27 @@ export default function BikePage({ d: base, start }) {
         <div>{d.faq.map(([q, a], i) => <details key={q} open={i === 0}><summary>{q}</summary><p>{a}</p></details>)}</div>
       </div></section>
     ),
+    banner: () => d.banner && (
+      <section key="banner" className="bp-sec bp-banner" aria-label={d.name + ' banner'}><div className="wrap"><figure data-rv><img src={IMG(d.folder || d.slug)(d.banner)} alt={d.name + ' banner'} loading="lazy" /></figure></div></section>
+    ),
+    gallery: () => d.gallery && d.gallery.length > 0 && (
+      <section key="gallery" className="bp-sec" id="gallery"><div className="wrap">
+        <p className="bp-eyebrow">Gallery</p><h2 className="bp-h2">See it from <em>every angle</em></h2>
+        <ul className="bp-gal">{d.gallery.map((g, i) => { const f = typeof g === 'string' ? g : g.file, l = typeof g === 'string' ? d.name : (g.label || d.name); return (
+          <li key={f} data-rv style={{ '--i': i % 4 }}><a href={IMG(d.folder || d.slug)(f)} target="_blank" rel="noreferrer" aria-label={'Open photo: ' + l}><img className="bp-photo" src={IMG(d.folder || d.slug)(f)} alt={l} loading="lazy" /></a></li>) })}</ul>
+      </div></section>
+    ),
+    videos: () => d.videos && d.videos.length > 0 && (
+      <section key="videos" className="bp-sec dark" id="videos"><div className="wrap">
+        <p className="bp-eyebrow">In action</p><h2 className="bp-h2">Watch it <em>work</em></h2>
+        <ul className="bp-vid">{d.videos.map((v, i) => (
+          <li key={v.file} data-rv style={{ '--i': i % 3 }}>
+            <video controls muted playsInline loop preload="none" poster={v.poster ? IMG(d.folder || d.slug)(v.poster) : undefined} aria-label={v.title}><source src={IMG(d.folder || d.slug)(v.file)} type="video/mp4" /></video>
+            <b>{v.title}</b>{v.text && <p>{v.text}</p>}
+          </li>))}</ul>
+        <p className="bp-fine light">Videos load only when you press play.</p>
+      </div></section>
+    ),
     related: () => related.length > 0 && (
       <section key="related" className="bp-sec alt" aria-labelledby="rel"><div className="wrap">
         <p className="bp-eyebrow">Explore more</p><h2 id="rel" className="bp-h2">Similar <em>motorcycles</em></h2>
@@ -235,11 +287,26 @@ export default function BikePage({ d: base, start }) {
       </div></section>
     ),
   }
-  const NAVLBL = { highlights: 'Highlights', overview: 'Overview', features: 'Features', colours: 'Colours', variants: 'Variants', compare: 'Compare', specs: 'Specifications', finance: 'Price & Finance', accessories: 'Accessories', testride: 'Test Ride', faq: 'FAQ' }
+  /* Free-form sections: d.sections = [{ id, nav, eyebrow, title, intro, dark, items: [{title,text,image}], table: {heads, rows}, note }].
+     Put 'sec:<id>' in d.layout where the section should appear. Used for flex-fuel explainer, DNA chapters, ownership-cost tables etc. */
+  const secBlock = s => (
+    <section key={'sec-' + s.id} className={'bp-sec' + (s.dark ? ' dark' : s.alt ? ' alt' : '')} id={s.id}><div className="wrap">
+      {s.eyebrow && <p className="bp-eyebrow">{s.eyebrow}</p>}<h2 className="bp-h2">{s.title}</h2>
+      {s.intro && <p className="bp-lead">{s.intro}</p>}
+      {s.items && s.items.length > 0 && <ul className="bp-items">{s.items.map((it, i) => (
+        <li key={it.title} data-rv style={{ '--i': i % 4 }}>{it.image && <Photo d={d} file={it.image} label={it.title} className="feat" />}<div><b>{it.title}</b>{it.text && <p>{it.text}</p>}</div></li>))}</ul>}
+      {s.table && <div className="bp-tbl-wrap"><table className={'bp-tbl' + (s.dark ? ' dk' : '')}><thead><tr>{s.table.heads.map((h, i) => <th key={i} scope="col">{h}</th>)}</tr></thead>
+        <tbody>{s.table.rows.map(r => <tr key={r[0]}><th scope="row">{r[0]}</th>{r.slice(1).map((c, i) => <td key={i}>{c}</td>)}</tr>)}</tbody></table></div>}
+      {s.note && <p className={'bp-fine' + (s.dark ? ' light' : '')}>{s.note}</p>}
+    </div></section>
+  )
+  const NAVLBL = { highlights: 'Highlights', overview: 'Overview', features: 'Features', colours: 'Colours', variants: 'Variants', compare: 'Compare', specs: 'Specifications', finance: 'Price & Finance', gallery: 'Gallery', videos: 'Videos', accessories: 'Accessories', testride: 'Test Ride', faq: 'FAQ' }
   const NAVID = { testride: 'test-ride' }
-  const layout = d.layout || DEFAULT_LAYOUT
-  const rendered = layout.map(k => [k, B[k] && B[k]()]).filter(([, el]) => el)
-  const navItems = rendered.filter(([k]) => NAVLBL[k]).map(([k]) => [NAVID[k] || k, NAVLBL[k]])
+  const layout0 = d.layout || DEFAULT_LAYOUT
+  const layout = d.banner && !layout0.includes('banner') ? layout0.flatMap(k => k === 'testride' ? ['banner', k] : [k]) : layout0
+  const secOf = k => k.startsWith('sec:') ? (d.sections || []).find(s => s.id === k.slice(4)) : null
+  const rendered = layout.map(k => [k, secOf(k) ? secBlock(secOf(k)) : B[k] && B[k]()]).filter(([, el]) => el)
+  const navItems = rendered.filter(([k]) => NAVLBL[k] || (secOf(k) && secOf(k).nav)).map(([k]) => secOf(k) ? [secOf(k).id, secOf(k).nav] : [NAVID[k] || k, NAVLBL[k]])
   useEffect(() => {
     if (!('IntersectionObserver' in window)) return
     const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setActive(e.target.id)), { rootMargin: '-30% 0px -65% 0px' })
@@ -247,7 +314,7 @@ export default function BikePage({ d: base, start }) {
   }, [d])
 
   return (
-    <div className="bp">
+    <div className="bp" onClick={onAnchor}><div className="bp-progress" aria-hidden="true" />
       {rendered.map(([k, el]) => k === 'quick' ? [el, <nav key="nav" className="bp-nav" aria-label="On this page"><div className="wrap">{navItems.map(([id, l]) => <a key={id} href={'#' + id} className={active === id ? 'on' : ''}>{l}</a>)}</div></nav>] : el)}
     </div>
   )

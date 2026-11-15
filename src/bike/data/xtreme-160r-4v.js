@@ -1,5 +1,6 @@
 // XTREME 160R 4V: every value below was copied from heromotocorp.com/en-in/motorcycles/xtreme-160r-4v.html.
 // Anything Hero did not publish is left null/empty on purpose (price, mileage, accessories, variant price).
+// PHOTOS: six colour photos matched to names by looks (Pro Black vs Carbon Black especially): please confirm. Standard has only a 'coming soon' image on Hero, so no photo.
 // EDIT FREELY. Photos: drop files in public/images/xtreme-160r-4v/ and put the file name in the `image` fields.
 export default {
   slug: 'xtreme-160r-4v',
@@ -13,7 +14,7 @@ export default {
 
   layout: ['hero', 'quick', 'overview', 'features', 'colours', 'variants', 'compare', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
   featuresTitle: 'Discover what makes it the Adrenaline Machine',
-  variantNote: 'Hero MotoCorp does not publish separate prices or a feature-by-feature comparison for Carbon and Pro, so none are shown here. Ask us for the current difference.',
+  variantNote: 'Hero MotoCorp does not publish separate prices or a feature-by-feature comparison for Carbon, Pro and Standard, so none are shown here. Ask us for the current difference.',
   compare: { title: 'How it improves on the Xtreme 160R', heads: ['', 'Xtreme 160R', 'Xtreme 160R 4V'], rows: [['0–60 km/h', '4.5 s', '4.4 s'], ['Engine', '2V, air-cooled', '4V, oil-cooled'], ['Display', 'LCD', 'TFT'], ['Ride By Wire', 'No', 'Yes'], ['Cruise control', 'No', 'Yes']] },
   hero: { image: null },                                   // wide hero photo, e.g. 'hero.jpg'
   overview: {
@@ -42,16 +43,17 @@ export default {
   variants: [
     { id: 'carbon', name: 'Carbon', price: null, blurb: 'Carbon colour range.',
       colours: [
-        { name: 'Carbon Red', hex: '#c8102e', image: null },
-        { name: 'Carbon Black', hex: '#15161a', image: null },
-        { name: 'Carbon Grey', hex: '#6b7078', image: null },
-        { name: 'Abrax Orange', hex: '#ff6a13', image: null },
+        { name: 'Carbon Red', hex: '#c8102e', image: 'colour-carbon-red.webp' },
+        { name: 'Carbon Black', hex: '#15161a', image: 'colour-carbon-black.webp' },
+        { name: 'Carbon Grey', hex: '#6b7078', image: 'colour-carbon-grey.webp' },
+        { name: 'Abrax Orange', hex: '#ff6a13', image: 'colour-abrax-orange.webp' },
       ] },
     { id: 'pro', name: 'Pro', price: null, blurb: 'Pro colour range.',
       colours: [
-        { name: 'Pro Black', hex: '#0d0d10', image: null },
-        { name: 'Pro Red', hex: '#d3202a', image: null },
+        { name: 'Pro Black', hex: '#0d0d10', image: 'colour-pro-black.webp' },
+        { name: 'Pro Red', hex: '#d3202a', image: 'colour-pro-red.webp' },
       ] },
+    { id: 'standard', name: 'Standard', price: null, blurb: 'Colours not yet published by Hero.', colours: [] },
   ],
 
   // Key features, grouped. Only features Hero lists for this model.
@@ -104,9 +106,8 @@ export default {
     ['What engine does it have?', '163.2 cc, 4-valve, oil-cooled, 4-stroke single cylinder. 17.1 ps at 8750 rpm and 14.6 Nm at 6500 rpm, 5-speed gearbox, E20 fuel compatible.'],
     ['What are the key features?', 'Ride By Wire with Rain, Road and Sports modes, cruise control, 10.67 cm TFT with 60+ features and connectivity, drag race timer, dual channel ABS, panic brake alert, Class D LED headlamp and upside down forks.'],
     ['Which colours are available?', 'Carbon variant: Carbon Red, Carbon Black, Carbon Grey and Abrax Orange. Pro variant: Pro Black and Pro Red. Availability at the showroom may vary.'],
-    ['What variants are there?', 'Hero lists Carbon and Pro variants. Variant prices are not published on Hero’s page, so contact us for the latest.'],
+    ['What variants are there?', 'Hero lists Carbon, Pro and Standard variants. Variant prices are not published on Hero’s page, so contact us for the latest.'],
     ['How do I book a test ride or the bike?', 'Fill the test ride form on this page, WhatsApp us, call the showroom, or walk in at Kankanady, Mangalore.'],
-    ['Can I get finance?', 'Yes. We help with financing and documents. Rates and schemes depend on the financier, so use the EMI enquiry on this page and our team will share live options.'],
   ],
 
   related: ['Xtreme 250R', 'Xtreme 160R', 'Xpulse 210', 'Karizma XMR'],

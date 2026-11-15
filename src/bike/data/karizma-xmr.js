@@ -1,0 +1,72 @@
+// KARIZMA XMR: copied from heromotocorp.com (Karizma XMR page) and the Hero Genuine Accessories catalogue (part numbers as printed there). PRICES: `price: null`; Hero's Delhi price is never used.
+// PHOTOS: Hero's page names Phantom Black, Turbo Red and Iconic Yellow, and lists the variants XMR Top and XMR Combat. The grey photos in the gallery are unnamed (they look like the Combat variant; please confirm).
+import { WARRANTY, OFFERS, faq } from './_std.js'
+
+export default {
+  slug: 'karizma-xmr', name: 'Karizma XMR', category: 'Premium', tagline: 'The icon reborn',
+  seoDescription: 'Hero Karizma XMR at West Coast Motors, Mangalore: 210 cc 4V DOHC liquid-cooled, 25.5 PS, 6-speed with slip and assist clutch, USD forks, TFT cluster, dual channel ABS and a 5-year warranty. Book a test ride.',
+  source: 'https://www.heromotocorp.com/en-in/motorcycles/karizma-xmr.html',
+  warranty: WARRANTY, offers: OFFERS, hero: { image: 'hero.webp' },
+  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  quick: [['25.5', 'PS', 'Max power @ 9250 rpm'], ['20.4', 'Nm', 'Max torque @ 7250 rpm'], ['210', 'cc', '4V DOHC liquid cooled'], ['320', 'mm', 'Front petal disc brake']],
+  featuresTitle: 'Pure beauty. Pure beast.',
+  features: [
+    { title: 'Dynamic Aero-Layered Design', text: 'Aesthetic yet purposefully built to reduce drag and cool the engine, with signature H-shaped lamps on both the headlamp and tail lamp.', image: 'feat-design.webp' },
+    { title: 'Adjustable Windshield', text: 'First in its segment: an adjustable windshield for effortless high-speed cruising.', image: 'feat-windshield.webp' },
+    { title: '210 cc 4V DOHC Liquid Cooled Engine', text: 'Most powerful in its class: 25.5 PS @ 9250 rpm and 20.4 Nm @ 7250 rpm.', image: 'feat-engine.webp' },
+    { title: '6-Speed Transmission, Slip and Assist Clutch', text: 'Lighter upshifts and reduced drag in downshifts.', image: 'feat-perf.webp' },
+    { title: 'Upside Down Forks', text: 'Superior handling and high-speed stability.', image: 'feat-forks.webp' },
+    { title: 'High Tensile Steel Trellis Frame', text: 'Superior handling and high-speed stability.', image: 'feat-trellis.webp' },
+    { title: 'Light Weight Clip-On Handlebars', text: 'A balance of sportiness and a comfortable riding position.', image: 'feat-clip.webp' },
+    { title: '6-Step Gas Charged Monoshock', text: 'Consistent ride quality and excellent body control.', image: 'feat-suspension.webp' },
+    { title: 'Dual Channel ABS', text: 'Prevents wheel lock-up for optimal braking across terrains.', image: 'feat-abs.webp' },
+    { title: 'Petal Disc Brakes', text: '320 mm front and 230 mm rear.', image: 'feat-petal.webp' },
+    { title: 'TFT Instrument Cluster', text: 'With 35+ features.', image: 'feat-tft.webp' },
+    { title: 'Class-D LED Projector Headlamp', text: 'With first-in-segment intelligent illumination.', image: 'feat-headlamp.webp' },
+    { title: 'USB Fast Charging', text: 'Keep your phone charged on the move.', image: 'feat-usb.webp' },
+  ],
+  variants: [
+    { id: 'top', name: 'Karizma XMR Top', price: null, colours: [
+      { name: 'Phantom Black', hex: '#1a1a1c', image: 'colour-phantom-black.webp' }, { name: 'Turbo Red', hex: '#c8141c', image: 'colour-turbo-red.webp' }, { name: 'Iconic Yellow', hex: '#f2b705', image: 'colour-iconic-yellow.webp' },
+    ] },
+    { id: 'combat', name: 'Karizma XMR Combat', price: null, colours: [{ name: 'Combat (grey)', hex: '#8b9097', image: 'colour-combat.webp' }] },
+  ],
+  variantNote: 'Hero lists the Karizma XMR Top and the Karizma XMR Combat. Prices are not shown yet; ask us for the Mangalore price of each.',
+  colourNote: 'Hero’s page names Phantom Black, Turbo Red and Iconic Yellow. The Combat photo is the grey bike from your photos (colour name not given by Hero, please confirm).',
+  gallery: [
+    { file: 'g-1.webp', label: 'Karizma XMR in the city' }, { file: 'g-2.webp', label: 'Karizma XMR, side view' }, { file: 'g-3.webp', label: 'Karizma XMR on the road' },
+    { file: 'g-4.webp', label: 'Karizma XMR in motion' }, { file: 'g-5.webp', label: 'Karizma XMR cornering' }, { file: 'g-6.webp', label: 'Karizma XMR' },
+    { file: 'g-7.webp', label: 'XMR fairing and front forks' }, { file: 'g-8.webp', label: 'XMR close-up' },
+  ],
+  accessories: [
+    { name: 'XMR Brazen Turbo Red Gloss Helmet', part: 'M 99700ZZZE21S01S · L 99700ZZZE31S01S · XL 99700ZZZE41S01S', image: 'acc-helmet-red-gloss.webp' },
+    { name: 'XMR Brazen Turbo Red Matte Helmet', part: 'M 99700ZZZE21T01S · L 99700ZZZE31T01S · XL 99700ZZZE41T01S', image: 'acc-helmet-red-matte.webp' },
+    { name: 'XMR Brazen Eminent Yellow Gloss Helmet', part: 'M 99700ZZZE21S02S · XL 99700ZZZE41S02S (ask us for L)', image: 'acc-helmet-yellow-gloss.webp' },
+    { name: 'XMR Brazen Eminent Yellow Matte Helmet', part: 'M 99700ZZZE21T02S · L 99700ZZZE31T02S', image: 'acc-helmet-yellow-matte.webp' },
+    { name: 'Matt Phantom Seat Cover', part: '99632ACA000S', image: 'acc-seat-phantom.webp' },
+    { name: 'Turbo Red Seat Cover', part: '99630ACA000S', image: 'acc-seat-red.webp' },
+    { name: 'Iconic Yellow Seat Cover', part: '99631ACA000S', image: 'acc-seat-yellow.webp' },
+    { name: 'Tail Bag Sack 26L XMR', part: '99811ACA000S', image: 'acc-tail-bag.webp' },
+    { name: 'Magnetic Tank Bag 8L XMR', part: '99655ACA000S', image: 'acc-tank-bag.webp' },
+    { name: 'XMR Premium Bike Body Cover', part: '99660ACA000S', image: 'acc-body-cover.webp' },
+    { name: 'Kit Anti Glare Mirrors', part: '9965BACA001S', image: 'acc-mirrors.webp' },
+    { name: 'Kit, Rear Hugger', part: 'K5210BACA000S', image: 'acc-hugger.webp' },
+    { name: 'Premium Mobile Holder', part: '9945ABWL00S', image: 'acc-holder.webp' },
+    { name: 'Main Stand Kit', part: 'K50505ACAA000S', image: 'acc-main-stand.webp' },
+    { name: 'Fuel Tank Knee Pad Kit', part: '1754BACA000S', image: 'acc-knee-pad.webp' },
+  ],
+  specs: {
+    'Engine': { 'Type': '4 stroke, 4 valve, single cylinder, liquid cooled, DOHC', 'Bore & Stroke': '73 mm x 50 mm', 'Displacement': '210 cc', 'Compression Ratio': '12:1', 'Max. Power': '25.5 PS @ 9250 rpm', 'Max. Torque': '20.4 Nm @ 7250 rpm', 'Fuel Type': 'Fuel injection' },
+    'Transmission & Chassis': { 'Frame Type': 'Steel trellis frame', 'Transmission Type': 'Constant mesh, 6 speed', 'Swing Arm': 'Rectangular swing arm', 'Clutch Type': 'Wet type, slip and assist' },
+    'Suspension': { 'Front Suspension': 'Dia 37 mm telescopic front forks with anti-friction bush', 'Rear Suspension': 'Gas charged monoshock, 6 step pre-load adjustable' },
+    'Brakes & Tyres': { 'Front Brake': 'Dia 320 mm, petal disc', 'Rear Brake': 'Dia 230 mm, petal disc', 'ABS': 'Dual channel ABS', 'Wheel Type': 'Alloy wheels', 'Front Tyre': '100/80-17 TL', 'Rear Tyre': '140/70-17 TL' },
+    'Electricals': { 'Battery': 'MF battery 12V - 6 Ah, ETZ-7', 'Head Light': 'Auto illuminated Class-D LED projector headlamp with LED DRLs', 'Tail Light': 'Signature H-shaped LED tail light', 'Winkers': 'LED winkers with hazard indicator switch', 'Starting System': 'Self' },
+  },
+  specNote: 'Specifications are as shown on Hero’s page.',
+  faq: faq('Karizma XMR', [
+    ['What variants and colours does it come in?', 'Hero lists the Karizma XMR Top and the Karizma XMR Combat, with Phantom Black, Turbo Red and Iconic Yellow named on its page. Ask us what is in stock.'],
+    ['What engine does it have?', '210 cc 4-valve DOHC liquid-cooled single cylinder: 25.5 PS at 9250 rpm and 20.4 Nm at 7250 rpm, with a 6-speed gearbox and slip and assist clutch.'],
+    ['Which genuine accessories are available?', 'Hero lists helmets, seat covers, tail and tank bags, body cover, anti-glare mirrors, rear hugger, mobile holder, main stand and knee pads. Ask us what is in stock.'],
+  ]),
+  related: ['Xtreme 250R', 'Xpulse 210', 'Xtreme 160R 4V', 'Harley-Davidson X440'],
+}

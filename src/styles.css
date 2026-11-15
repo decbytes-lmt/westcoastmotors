@@ -619,3 +619,4 @@ body{overflow-x:clip}
   .burger{width:38px;height:38px}
 }
 @media (max-width:359px){.dealer{display:none}}
+@media (max-width:430px){.nav-cta{padding:9px 12px;font-size:13px}.brand{gap:10px}.burger{width:40px}}

@@ -1,0 +1,25 @@
+// Card thumbnails for the /petrol list: slug -> image under public/images. Generated from the bike data files.
+export const CARD = {
+  "xtreme-160r-4v": "xtreme-160r-4v/colour-carbon-red.webp",
+  "hf-deluxe": "hf-deluxe/pro-blue.webp",
+  "hf-100": "hf-100/red-black.webp",
+  "passion": "passion-plus/g-1.webp",
+  "glamour": "glamour/colour-silver.webp",
+  "glamour-x": "glamour-x/colour-black-pearl-red.webp",
+  "glamour-x-abs": "glamour-x-abs/colour-black-pearl-red.webp",
+  "super-splendor-xtec": "super-splendor-xtec/colour-candy-red.webp",
+  "xtreme-160r": "xtreme-160r/colour-stealth-black.webp",
+  "xtreme-125r": "xtreme-125r/colour-black-leaf-green.webp",
+  "xtreme-250r": "xtreme-250r/colour-stealth-black.webp",
+  "xpulse-200-4v": "xpulse-200-4v/colour-black-sports-red.webp",
+  "xpulse-210": "xpulse-210/colour-glacier-white.webp",
+  "super-splendor-xtec-2-0": "super-splendor-xtec-2-0/colour-candy-red.webp",
+  "karizma-xmr": "karizma-xmr/colour-phantom-black.webp",
+  "harley-davidson-x440": "harley-davidson-x440/colour-thick-red.webp",
+  "harley-davidson-x440-t": "harley-davidson-x440-t/colour-pearl-blue.webp",
+  "splendor-flex": "splendor-hf-flex/splendor-lime-yellow.webp",
+  "hf-deluxe-flex": "splendor-hf-flex/hf-lime-yellow.webp",
+  "splendor": "splendor-plus/blue-black.webp",
+  "splendor-xtec": "splendor-plus/xtec-black-tornado-grey.webp",
+  "splendor-xtec-2-0": "splendor-plus/xtec2-black-heavy-grey.webp"
+}

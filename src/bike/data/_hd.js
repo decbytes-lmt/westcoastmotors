@@ -1,0 +1,10 @@
+// Shared by the Harley-Davidson X440 and X440 T pages: Hero's page shows one specification table for both. Values copied as shown.
+export const HD_SPECS = {
+  'Engine': { 'Type': '440 cc single cylinder, air-oil cooled', 'Valve System': '2V SOHC', 'Bore x Stroke': '79.6 mm x 88.4 mm', 'Compression Ratio': '9.65:1', 'Max. Power': '27 bhp @ 6000 rpm', 'Max. Torque': '38 Nm @ 4000 rpm', 'Exhaust': 'Single side exhaust', 'Fuel Economy': '35 km/l (WMTC carbon balancing cycle, as stated by Hero)' },
+  'Transmission': { 'Clutch': 'Multi plate, wet type, assist and slipper clutch', 'Primary Drive': '2.308', 'Gear Ratios': '1st 2.833 · 2nd 1.875 · 3rd 1.4 · 4th 1.136 · 5th 0.958 · 6th 0.72' },
+  'Chassis & Suspension': { 'Frame Type': 'Trellis frame body', 'Front Fork': 'KYB 43 mm USD forks, 130 mm travel', 'Rear Shocks': 'Gas charged twin shocks, 7 step pre-load adjustable', 'Wheels': '18" front, 17" rear diamond cut alloys', 'Front Tyre': '100/90-18 56H TL', 'Rear Tyre': '100/70-17 66H TL', 'Tyre Type': 'MRF Zapper Hyke' },
+  'Brakes': { 'Front': '320 mm disc', 'Rear': '240 mm disc', 'ABS': 'Switchable ABS (rear only)', 'Traction Control': 'Switchable traction control' },
+  'Dimensions': { 'Length': '2156 mm', 'Width': '818 mm', 'Seat Height (unladen)': '805 mm', 'Ground Clearance': '170 mm', 'Wheelbase': '1418 mm', 'Rake': '25.5°', 'Trail': '101 mm', 'Fuel Tank Capacity': '13.5 l', 'Oil Capacity (with filter)': '2.6 l', 'Weight (in running order)': '192 kg', 'Lean Angle': '36° left and right' },
+  'Electricals & Infotainment': { 'Lighting': 'All-LED headlamp with multi-projectors and signature DRL, LED winkers, LED tail lamp, auto headlamp illumination', 'Gauges': '3.5" TFT display with round gauge, RTMI, range display, gear indicator, service and low fuel indication', 'Connectivity': 'Bluetooth: music control, accept and reject calls, phone battery, missed call, message alert and network strength', 'H-D Connect App': 'Yes', 'USB': '2A quick charge 3.0 standard' },
+  'Warranty': { 'Period': '5 years or 70,000 km' },
+}

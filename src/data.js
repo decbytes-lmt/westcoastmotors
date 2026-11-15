@@ -1,3 +1,4 @@
+import { CARD } from './bike/cardImages.js'
 // EDIT THIS FILE to change contact info, models and prices. Put photos in public/images/ and set `image: 'file.png'`.
 export const SITE = {
   name: 'West Coast Motors', tagline: 'Ride Ahead Together',
@@ -394,5 +395,5 @@ EV.filter(m => /VX2/.test(m.name) && !/Knight/.test(m.name)).forEach(m => {
 
 // route helpers (do not edit)
 const slugify = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-PETROL.forEach(m => { m.page = 'petrol'; m.slug = slugify(m.name) })
+PETROL.forEach(m => { m.page = 'petrol'; m.slug = slugify(m.name); if (CARD[m.slug]) m.image = CARD[m.slug] })
 EV.forEach(m => { m.page = 'ev'; m.slug = slugify(m.name) })
