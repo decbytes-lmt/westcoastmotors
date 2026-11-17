@@ -40,9 +40,9 @@ export default {
       variantNote: 'Hero lists these four variants. Prices are not shown here; ask us for the Mangalore price of each.',
       colours: [
         { name: 'Blue Black', hex: '#1e3a6e', image: 'blue-black.webp' }, { name: 'Red Black', hex: '#9b1c1c', image: 'red-black.webp' }, { name: 'Force Silver', hex: '#b8bec6', image: 'force-silver.webp' },
-        { name: 'Black Heavy Grey', hex: '#3d4147', image: null }, { name: 'Black Tornado Grey', hex: '#4a4f56', image: null }, { name: 'Black Sparking Blue', hex: '#1b2f5b', image: null },
-        { name: 'Black Red Purple', hex: '#4a1d33', image: null }, { name: 'Sports Red Black', hex: '#b01620', image: null }],
-      colourNote: 'Hero says Splendor+ comes in 11 colours. These eight names are the ones published on its page; more will be added when confirmed.',
+        { name: 'Black Heavy Grey', hex: '#3d4147', image: 'black-heavy-grey.webp' }, { name: 'Black Tornado Grey', hex: '#4a4f56', image: 'black-tornado-grey.webp' }, { name: 'Black Sparking Blue', hex: '#1b2f5b', image: 'black-sparking-blue.webp' },
+        { name: 'Black Red Purple', hex: '#4a1d33', image: 'black-red-purple.webp' }, { name: 'Sports Red Black', hex: '#b01620', image: 'sports-red-black.webp' }],
+      colourNote: 'Hero says Splendor+ comes in 11 colours. These eight names are the ones published on its page. The five newer photos were matched to names by looks, please confirm.',
     }),
     mk('splendor-xtec', 'Splendor+ XTEC', {
       overview: { title: 'More tech, same Splendor', intro: 'Everything you trust in the Splendor+, plus a full digital meter with real-time mileage, Bluetooth call and SMS alerts and a front disc brake option.', images: ['ov-2.webp', 'ov-1.webp'] },
@@ -52,8 +52,8 @@ export default {
       specs: {"Engine": {"Engine Type": "Air cooled, 4-stroke, Single cylinder, OHC", "Displacement": "97.2 cc", "Max. Power": "5.9 Kw @ 8000 rpm", "Max. Torque": "8.05 Nm @ 6000 rpm", "Bore x Stroke": "50.0 x 49.5 mm", "Fuel System": "Programmed Fuel Injection"}, "Transmission & Chassis": {"Clutch Type": "Multiplate Wet Type", "Transmission Type": "4-speed Constant Mesh", "Frame Type": "Tubular Double Cradle"}, "Suspension": {"Front Suspension Type": "Telescopic Hydraulic Shock Absorbers", "Rear Suspension Type": "Swingarm with 5-Step Adjustable Hydraulic Shock Absorbers"}, "Brakes & Tyres": {"Wheels Type": "Alloy", "Front Tyre": "80/100-18 M/C 47P (Tubeless)", "Rear Tyre": "80/100-18 M/C 54P (Tubeless)"}, "Dimensions": {"Overall Length": "2000 mm", "Overall Width": "720 mm", "Overall Height": "1052 mm", "Saddle Height": "785", "Wheelbase": "1236", "Ground Clearance": "165", "Fuel Tank Capacity": "9.8 L", "Kerb Weight": "112 kg"}, "Electricals": {"Starting Method": "Electric Start", "Battery (V-Ah)": "MF Battery, 12V - 3Ah", "Head Lamp": "12V 35 /35W Halogen Bulb MFR", "Position Lamp": "LED", "Tail/Stop Lamp": "12V -5 / 10W - Multi Focus Reflector", "Turn Signal Lamp": "12V - 10W x 4 Multi Focus Reflector"}},
       variants: [{ id: 'drum', name: 'Drum Brake OBD2B', price: null }, { id: 'disc', name: 'Disc Brake OBD2B', price: null }],
       variantNote: 'Prices are not shown here; ask us for the Mangalore price of each.',
-      colours: [{ name: 'Black Tornado Grey', hex: '#4a4f56', image: 'xtec-black-tornado-grey.webp' }],
-      colourNote: 'Hero says XTEC comes in 3 colours; only this name is published on the page we have, so the others will be added when confirmed.',
+      colours: [{ name: 'Black Tornado Grey', hex: '#4a4f56', image: 'xtec-black-tornado-grey.webp' }, { name: 'Black Red', hex: '#8f1d22', image: 'xtec-black-red.webp' }, { name: 'Black Blue', hex: '#1d3f8f', image: 'xtec-black-blue.webp' }],
+      colourNote: 'Hero says XTEC comes in 3 colours; only Black Tornado Grey is named on the page we have. The red and blue are the supplied photos, named by looks: please confirm.',
     }),
     mk('splendor-xtec-2-0', 'Splendor+ XTEC 2.0', {
       overview: { title: 'The most advanced Splendor+', intro: 'Digital meter with Bluetooth connectivity, hazard lights, a full LED headlamp with signature HIPL and a hinged utility case, with Hero’s best-in-class fuel economy claim.', images: ['ov-1.webp', 'ov-2.webp'] },
@@ -62,8 +62,8 @@ export default {
       fuelClaim: '70 kmpl*',
       specs: {"Engine": {"Engine Type": "Air cooled, 4-stroke, Single cylinder, OHC", "Displacement": "97.2 cc", "Max. Power": "5.9 Kw @ 8000 rpm", "Max. Torque": "8.05 N-m @ 6000 rpm", "Bore x Stroke": "50.0 x 49.5 mm", "Fuel System": "Programmed Fuel Injection"}, "Transmission & Chassis": {"Clutch Type": "Multiplate Wet Type", "Transmission Type": "4-speed Constant Mesh", "Frame Type": "Tubular Double Cradle"}, "Suspension": {"Front Suspension Type": "Telescopic Hydraulic Shock Absorbers", "Rear Suspension Type": "Swingarm with 5-Step Adjustable Hydraulic Shock Absorbers"}, "Brakes & Tyres": {"Wheels Type": "Alloy", "Front Tyre": "80/100-18 M/C 47P (Tubeless)", "Rear Tyre": "80/100-18 M/C 54P (Tubeless)"}, "Dimensions": {"Overall Length": "2000 mm", "Overall Width": "720 mm", "Overall Height": "1052 mm", "Saddle Height": "785", "Wheelbase": "1236", "Ground Clearance": "165", "Fuel Tank Capacity": "9.8 L", "Kerb Weight": "112 kg"}, "Electricals": {"Starting Method": "Electric Start", "Battery (V-Ah)": "MF Battery, 12-4Ah/ETZ-5", "Head Lamp": "LED", "Position Lamp": "LED (Integrated type)"}},
       variants: [{ id: 'drum', name: 'Drum Brake OBD2B', price: null }],
-      colours: [{ name: 'Black Heavy Grey', hex: '#3d4147', image: 'xtec2-black-heavy-grey.webp' }],
-      colourNote: 'Hero says XTEC 2.0 comes in 3 colours; only this name is published on the page we have, so the others will be added when confirmed.',
+      colours: [{ name: 'Black Heavy Grey', hex: '#3d4147', image: 'xtec2-black-heavy-grey.webp' }, { name: 'Black Blue', hex: '#1d3f8f', image: 'xtec2-black-blue.webp' }, { name: 'Black Red', hex: '#8f1d22', image: 'xtec2-black-red.webp' }],
+      colourNote: 'Hero says XTEC 2.0 comes in 3 colours; only Black Heavy Grey is named on the page we have. The blue and red are the supplied photos, named by looks: please confirm.',
     }),
   ],
 }

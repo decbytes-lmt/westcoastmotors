@@ -17,6 +17,8 @@ import ssx2 from './super-splendor-xtec-2-0.js'
 import km from './karizma-xmr.js'
 import hd from './harley-davidson-x440.js'
 import hdt from './harley-davidson-x440-t.js'
+import destini110 from './destini-110.js'
+import destini125 from './new-destini-125.js'
 // One entry per URL slug: { d: data, start: model tab to open }. Add each new bike here.
 // A family page (Splendor+) is one data object served at several slugs, each opening its own tab.
 export const BIKES = {
@@ -37,6 +39,8 @@ export const BIKES = {
   [km.slug]: { d: km },
   [hd.slug]: { d: hd },
   [hdt.slug]: { d: hdt },
+  [destini110.slug]: { d: destini110 },
+  [destini125.slug]: { d: destini125 },
   ...Object.fromEntries(flex.models.map(m => [m.id, { d: flex, start: m.id }])),
   ...Object.fromEntries(splendor.models.map(m => [m.id, { d: splendor, start: m.id }])),
 }

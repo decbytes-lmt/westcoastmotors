@@ -72,3 +72,15 @@
 .bp-banner{padding:0;background:#000}.bp-banner .wrap{max-width:1360px}
 .bp-banner figure{margin:0;overflow:hidden;position:relative}.bp-banner img{display:block;width:100%;height:auto;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
 .bp-banner figure:hover img{transform:scale(1.03)}
+
+/* variant cards with picture */
+.bp-var .bp-var-img{display:block;width:100%;aspect-ratio:16/10;height:auto;min-height:0;object-fit:contain;background:radial-gradient(circle at 50% 70%,rgba(255,255,255,.08),transparent 70%);border:0;margin-bottom:6px;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.bp-var:hover .bp-var-img{transform:scale(1.05)}
+
+/* mobile hero: bike sits under the buttons, never behind text */
+@media (max-width:820px){
+  .bp-hero{flex-direction:column;min-height:0}
+  .bp-hero-bike{position:relative!important;order:2;right:auto!important;bottom:auto!important;left:auto;width:min(100%,520px)!important;max-height:none!important;height:auto;opacity:1!important;margin:0 auto;padding:0 16px 40px;box-sizing:border-box;object-position:center bottom}
+  .bp-hero-in{padding-bottom:12px}
+  .bp-hero::after{height:60px}
+}

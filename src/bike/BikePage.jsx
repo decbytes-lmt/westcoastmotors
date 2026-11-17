@@ -55,6 +55,7 @@ export default function BikePage({ d: base, start }) {
   const [vid, setVid] = useState(d.variants[0].id)
   const variant = d.variants.find(v => v.id === vid) || d.variants[0]
   const coloursOf = v => v.colours || d.colours || []
+  const varImg = v => v.image || coloursOf(v)[0]?.image || d.variants.map(x => x.image || coloursOf(x)[0]?.image).find(Boolean) || null
   const cols = coloursOf(variant)
   const [colName, setColName] = useState(cols[0] ? cols[0].name : '')
   const colour = cols.find(c => c.name === colName) || cols[0] || null
@@ -95,7 +96,7 @@ export default function BikePage({ d: base, start }) {
         {!(d.hero && d.hero.image) && (d.hero && d.hero.bike || pic) && <img className="bp-hero-bike" key={(d.hero && d.hero.bike) || pic} src={IMG(d.folder || d.slug)((d.hero && d.hero.bike) || pic)} alt={`${d.name}${colour ? ' in ' + colour.name : ''}`} />}
         <div className="bp-hero-shade" />
         <div className="wrap bp-hero-in">
-          <nav className="bp-crumb" aria-label="Breadcrumb"><a href="#/">Home</a><i>/</i><a href="#/petrol">Motorcycles</a><i>/</i><span>{d.name}</span></nav>
+          <nav className="bp-crumb" aria-label="Breadcrumb"><a href="#/">Home</a><i>/</i><a href="#/petrol">{d.category === 'Scooter' ? 'Scooters' : 'Motorcycles'}</a><i>/</i><span>{d.name}</span></nav>
           {models && <div className="bp-models" role="tablist" aria-label="Choose model">{models.map(x => <button key={x.id} role="tab" aria-selected={x.id === mid} className={x.id === mid ? 'on' : ''} onClick={() => setMid(x.id)}>{x.name}</button>)}</div>}
           <p className="bp-eyebrow">Hero · {d.category}</p>
           <h1 id="bp-h1" className="bp-h1" key={mid}>{d.name}</h1>
@@ -172,11 +173,12 @@ export default function BikePage({ d: base, start }) {
         </div>
       </div></section>
     ),
-    variants: () => d.variants.length > 1 && (
+    variants: () => d.variants.length >= 1 && (
       <section key="variants" className="bp-sec alt" id="variants"><div className="wrap">
         <p className="bp-eyebrow">Variants</p><h2 className="bp-h2">Choose your <em>variant</em></h2>
         <div className="bp-vars">{d.variants.map(v => (
           <button key={v.id} type="button" className={'bp-var' + (v.id === vid ? ' on' : '')} aria-pressed={v.id === vid} onClick={() => pickVariant(v.id)} data-rv>
+            {varImg(v) && <Photo d={d} file={varImg(v)} label={v.name} className="bp-var-img" />}
             <b>{v.name}</b><span className="p">{v.price || 'Price on request'}</span>{v.blurb && <span>{v.blurb}</span>}{v.id === vid && <em>Selected</em>}
           </button>))}</div>
         {d.variantNote && <p className="bp-fine">{d.variantNote}</p>}
@@ -215,16 +217,10 @@ export default function BikePage({ d: base, start }) {
     finance: () => (
       <section key="finance" className="bp-sec dark" id="finance"><div className="wrap bp-fin">
         <div data-rv>
-          <p className="bp-eyebrow">Price and finance</p><h2 className="bp-h2">Ride home <em>easier</em></h2>
+          <p className="bp-eyebrow">Price</p><h2 className="bp-h2">Mangalore <em>price</em></h2>
           <table className="bp-tbl dk"><thead><tr><th scope="col">Variant</th><th scope="col">Ex-showroom, Mangalore</th></tr></thead>
             <tbody>{d.variants.map(v => <tr key={v.id}><th scope="row">{d.name}{d.variants.length > 1 || v.name !== 'Standard' ? ' ' + v.name : ''}</th><td className={v.price ? '' : 'na'}>{v.price || 'Price on request'}</td></tr>)}</tbody></table>
           <p className="bp-fine light">Prices are subject to change. The final on-road price (RTO, insurance and other charges) must be confirmed with West Coast Motors.</p>
-        </div>
-        <div className="bp-emi" data-rv>
-          <h3>EMI enquiry</h3>
-          {d.finance && d.finance.promo && d.finance.promo.length > 0 && <><ul>{d.finance.promo.map(p => <li key={p}>{p}</li>)}</ul>{d.finance.promoNote && <p className="bp-fine light">{d.finance.promoNote}</p>}</>}
-          <Emi />
-          <a className="bp-btn" href={waLink(`Hi West Coast Motors, I need EMI / finance details for ${d.name} (${variant.name}).`)} target="_blank" rel="noreferrer">Get finance assistance</a>
         </div>
       </div></section>
     ),
@@ -258,7 +254,7 @@ export default function BikePage({ d: base, start }) {
       </div></section>
     ),
     banner: () => d.banner && (
-      <section key="banner" className="bp-sec bp-banner" aria-label={d.name + ' banner'}><div className="wrap"><figure data-rv><img src={IMG(d.folder || d.slug)(d.banner)} alt={d.name + ' banner'} loading="lazy" /></figure></div></section>
+      <section key="banner" className="bp-sec bp-banner" aria-label={d.name + ' banner'}><div className="wrap"><figure data-rv><picture>{d.bannerMobile && <source media="(max-width:700px)" srcSet={IMG(d.folder || d.slug)(d.bannerMobile)} />}<img src={IMG(d.folder || d.slug)(d.banner)} alt={d.name + ' banner'} loading="lazy" /></picture></figure></div></section>
     ),
     gallery: () => d.gallery && d.gallery.length > 0 && (
       <section key="gallery" className="bp-sec" id="gallery"><div className="wrap">
@@ -300,7 +296,7 @@ export default function BikePage({ d: base, start }) {
       {s.note && <p className={'bp-fine' + (s.dark ? ' light' : '')}>{s.note}</p>}
     </div></section>
   )
-  const NAVLBL = { highlights: 'Highlights', overview: 'Overview', features: 'Features', colours: 'Colours', variants: 'Variants', compare: 'Compare', specs: 'Specifications', finance: 'Price & Finance', gallery: 'Gallery', videos: 'Videos', accessories: 'Accessories', testride: 'Test Ride', faq: 'FAQ' }
+  const NAVLBL = { highlights: 'Highlights', overview: 'Overview', features: 'Features', colours: 'Colours', variants: 'Variants', compare: 'Compare', specs: 'Specifications', finance: 'Price', gallery: 'Gallery', videos: 'Videos', accessories: 'Accessories', testride: 'Test Ride', faq: 'FAQ' }
   const NAVID = { testride: 'test-ride' }
   const layout0 = d.layout || DEFAULT_LAYOUT
   const layout = d.banner && !layout0.includes('banner') ? layout0.flatMap(k => k === 'testride' ? ['banner', k] : [k]) : layout0
@@ -324,13 +320,13 @@ const DEFAULT_LAYOUT = ['hero', 'quick', 'overview', 'highlights', 'features', '
 
 /* Simple EMI estimator: standard reducing-balance formula. Illustrative only. */
 function Emi() {
-  const [p, setP] = useState(60000), [r, setR] = useState(12), [n, setN] = useState(24)
+  const [p, setP] = useState(50000), [r, setR] = useState(10), [n, setN] = useState(30)
   const i = r / 1200, emi = i ? p * i * Math.pow(1 + i, n) / (Math.pow(1 + i, n) - 1) : p / n
   const f = x => Math.round(x).toLocaleString('en-IN')
   return (
     <div className="bp-calc" aria-label="EMI estimator">
-      <label>Loan amount <b>₹ {f(p)}</b><input type="range" min="10000" max="150000" step="5000" value={p} onChange={e => setP(+e.target.value)} /></label>
-      <label>Interest rate <b>{r}% p.a.</b><input type="range" min="8" max="15" step="0.5" value={r} onChange={e => setR(+e.target.value)} /></label>
+      <label>Loan amount <b>₹ {f(p)}</b><input type="range" min="10000" max="100000" step="5000" value={p} onChange={e => setP(+e.target.value)} /></label>
+      <label>Interest rate <b>{r}% p.a.</b><input type="range" min="8" max="20" step="0.5" value={r} onChange={e => setR(+e.target.value)} /></label>
       <label>Tenure <b>{n} months</b><input type="range" min="6" max="60" step="6" value={n} onChange={e => setN(+e.target.value)} /></label>
       <div className="out"><span>Estimated EMI</span><b>₹ {f(emi)}<small>/month</small></b></div>
       <small>Estimate only. Actual EMI depends on the financier and your profile.</small>

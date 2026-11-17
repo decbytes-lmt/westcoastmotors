@@ -1,5 +1,6 @@
 // PASSION+ : copied from the Hero MotoCorp Passion+ page text and screenshots supplied by the owner.
 // PRICES: `price: null`; fill the Mangalore ex-showroom price per variant when ready.
+// VARIANT PHOTOS (matched by looks, please confirm): Drum = g-7, Disc = g-1, 125 Million Edition = g-4.
 // COLOURS: Hero's page text does not name the Passion+ colours, so none are named here (no guessing). The photos are shown in the gallery.
 // Folder: public/images/passion-plus/
 import { WARRANTY, OFFERS, FINANCE, faq } from './_std.js'
@@ -15,9 +16,9 @@ export default {
   overview: { title: 'Bold dual-tone, built to last', intro: 'The all-new Passion+ comes with bold dual-tone graphics, an LED projector headlamp and a disc brake option, on a fuel-injected 97.2 cc engine.', images: ['banner.webp'] },
   featuresTitle: 'Discover what makes Passion+ lovable',
   features: [
-    { title: 'Plush and comfortable seat', text: 'Long seat, more comfort for the rider and pillion.', image: null },
-    { title: 'Bluetooth call and SMS alerts', text: 'Stay informed on every ride. Available on the Disc variant.', image: null },
-    { title: 'Elegant chrome garnish', text: '', image: null },
+    { title: 'Plush and comfortable seat', text: 'Long seat, more comfort for the rider and pillion.', image: 'feat-seat.webp' },
+    { title: 'Bluetooth call and SMS alerts', text: 'Stay informed on every ride. Available on the Disc variant.', image: 'feat-bluetooth.webp' },
+    { title: 'Elegant chrome garnish', text: '', image: 'feat-chrome.webp' },
     { title: 'i3S technology', text: 'Idle stop-start for better fuel efficiency.', image: null },
     { title: 'Side stand engine cut-off', text: 'Prevents the bike from moving while the side stand is engaged.', image: null },
     { title: 'Spacious utility box', text: '', image: null },
@@ -27,9 +28,9 @@ export default {
     { title: 'Front disc brake', text: 'Confident braking on the Disc variant.', image: null },
   ],
   variants: [
-    { id: 'drum', name: 'Drum Brake OBD2B', price: null, blurb: 'Drum brakes front and rear, digi-analog cluster.' },
-    { id: 'disc', name: 'Disc', price: null, blurb: 'Front disc brake, fully digital cluster, Bluetooth call and SMS alert.' },
-    { id: 'm125', name: '125 Million Edition', price: null, blurb: 'Special edition. Ask us for details.' },
+    { id: 'drum', name: 'Drum Brake OBD2B', image: 'g-7.webp', price: null, blurb: 'Drum brakes front and rear, digi-analog cluster.' },
+    { id: 'disc', name: 'Disc', image: 'g-1.webp', price: null, blurb: 'Front disc brake, fully digital cluster, Bluetooth call and SMS alert.' },
+    { id: 'm125', name: '125 Million Edition', image: 'g-4.webp', price: null, blurb: 'Special edition. Ask us for details.' },
   ],
   variantNote: 'Prices are not shown yet; ask us for the Mangalore price of each variant.',
   compare: { title: 'Drum vs Disc', heads: ['', 'Drum variant', 'Disc variant'], rows: [['Brake type', 'Drum - Drum', 'Disc - Drum'], ['Instrument cluster', 'Digi - Analog', 'Fully digital'], ['Mileage (Hero)', '70 kmpl', '70 kmpl'], ['Kerb weight', '115 kg', '116 kg'], ['Bluetooth with call and SMS alert', 'No', 'Yes'], ['Projector LED headlight', 'Yes', 'Yes']] },

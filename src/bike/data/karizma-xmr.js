@@ -1,5 +1,5 @@
 // KARIZMA XMR: copied from heromotocorp.com (Karizma XMR page) and the Hero Genuine Accessories catalogue (part numbers as printed there). PRICES: `price: null`; Hero's Delhi price is never used.
-// PHOTOS: Hero's page names Phantom Black, Turbo Red and Iconic Yellow, and lists the variants XMR Top and XMR Combat. The grey photos in the gallery are unnamed (they look like the Combat variant; please confirm).
+// PHOTOS: Hero's page names Phantom Black, Turbo Red and Iconic Yellow, and lists the variants XMR Top and XMR Combat. Colour photos are the studio shots supplied by the shop (Combat Grey named by the supplied file).
 import { WARRANTY, OFFERS, faq } from './_std.js'
 
 export default {
@@ -29,10 +29,10 @@ export default {
     { id: 'top', name: 'Karizma XMR Top', price: null, colours: [
       { name: 'Phantom Black', hex: '#1a1a1c', image: 'colour-phantom-black.webp' }, { name: 'Turbo Red', hex: '#c8141c', image: 'colour-turbo-red.webp' }, { name: 'Iconic Yellow', hex: '#f2b705', image: 'colour-iconic-yellow.webp' },
     ] },
-    { id: 'combat', name: 'Karizma XMR Combat', price: null, colours: [{ name: 'Combat (grey)', hex: '#8b9097', image: 'colour-combat.webp' }] },
+    { id: 'combat', name: 'Karizma XMR Combat', price: null, colours: [{ name: 'Combat Grey', hex: '#8b9097', image: 'colour-combat.webp' }] },
   ],
   variantNote: 'Hero lists the Karizma XMR Top and the Karizma XMR Combat. Prices are not shown yet; ask us for the Mangalore price of each.',
-  colourNote: 'Hero’s page names Phantom Black, Turbo Red and Iconic Yellow. The Combat photo is the grey bike from your photos (colour name not given by Hero, please confirm).',
+  colourNote: 'Hero’s page names Phantom Black, Turbo Red and Iconic Yellow for the XMR Top; the XMR Combat photo is the grey bike. Ask us which colour is in stock.',
   gallery: [
     { file: 'g-1.webp', label: 'Karizma XMR in the city' }, { file: 'g-2.webp', label: 'Karizma XMR, side view' }, { file: 'g-3.webp', label: 'Karizma XMR on the road' },
     { file: 'g-4.webp', label: 'Karizma XMR in motion' }, { file: 'g-5.webp', label: 'Karizma XMR cornering' }, { file: 'g-6.webp', label: 'Karizma XMR' },

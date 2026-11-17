@@ -1,5 +1,5 @@
 // HARLEY-DAVIDSON X440: copied from Hero's Harley-Davidson X440 page. PRICES: `price: null`; Delhi prices are never used.
-// PHOTOS: Hero names seven colours for the X440 (listed in the colour note); only two photos match with confidence. Thick Red is named by Hero's own file; the dark photo was matched by looks as Matte Black (please confirm). The other photos are unnamed.
+// PHOTOS: six supplied colour photos matched to Hero's colour names by looks (please confirm); no Mustard Denim photo.
 import { WARRANTY, OFFERS, faq } from './_std.js'
 import { HD_SPECS } from './_hd.js'
 
@@ -22,11 +22,15 @@ export default {
   ],
   variants: [{ id: 's', name: 'X440 S', price: null }, { id: 'vivid', name: 'X440 Vivid', price: null }],
   colours: [
-    { name: 'Metallic Thick Red', hex: '#9b1b24', image: 'colour-thick-red.webp' },
     { name: 'Matte Black', hex: '#1c1c1e', image: 'colour-matte-black.webp' },
+    { name: 'Baja Orange', hex: '#d9731a', image: 'colour-baja-orange.webp' },
+    { name: 'Metallic Thick Red', hex: '#7e1d2b', image: 'colour-thick-red.webp' },
+    { name: 'Metallic Dark Silver', hex: '#5d6168', image: 'colour-dark-silver.webp' },
+    { name: 'Mustard', hex: '#c9a227', image: 'colour-mustard.webp' },
+    { name: 'Goldfish Silver', hex: '#d7d9dc', image: 'colour-goldfish-silver.webp' },
   ],
   variantNote: 'Hero lists the X440 S and the X440 Vivid. Prices are not shown yet; ask us for the Mangalore price of each.',
-  colourNote: 'Hero names Matte Black, Baja Orange, Metallic Thick Red, Metallic Dark Silver, Mustard, Goldfish Silver and Mustard Denim. We show the photos we have; ask us what is in stock.',
+  colourNote: 'Hero names seven colours: Matte Black, Baja Orange, Metallic Thick Red, Metallic Dark Silver, Mustard, Goldfish Silver and Mustard Denim. We show the six photos supplied (no Mustard Denim photo yet). Photos were matched to names by looks, please confirm.',
   gallery: [
     { file: 'g-01.webp', label: 'X440 in orange and black' }, { file: 'g-02.webp', label: 'X440 in red' }, { file: 'g-03.webp', label: 'X440 in silver' }, { file: 'g-04.webp', label: 'X440 lineup' },
     { file: 'g-05.webp', label: 'X440 in mustard' }, { file: 'g-07.webp', label: 'X440 in the city' }, { file: 'g-09.webp', label: 'X440 on the road' }, { file: 'g-10.webp', label: 'X440 tank close-up' },

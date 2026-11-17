@@ -6,7 +6,7 @@ export default {
   slug: 'xtreme-250r', name: 'Xtreme 250R', category: 'Premium', tagline: 'Even more Extreme',
   seoDescription: 'Hero Xtreme 250R at West Coast Motors, Mangalore: 250 cc liquid-cooled, 30 PS, TFT display, traction control, quick shifter, cruise control, dual channel ABS and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/xtreme-250r.html',
-  warranty: WARRANTY, offers: OFFERS, accessories: [], banner: 'banner.webp', hero: { image: null },
+  warranty: WARRANTY, offers: OFFERS, accessories: [], banner: 'banner.webp', bannerMobile: 'banner-mobile.webp', hero: { image: null },
   layout: ['hero', 'offers', 'quick', 'features', 'videos', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['30', 'PS', 'Max power @ 9250 rpm'], ['25.3', 'Nm', 'Max torque @ 7500 rpm'], ['250', 'cc', 'Displacement'], ['43', 'mm', 'USD forks']],
   featuresTitle: 'Discover what makes Xtreme 250R even more extreme',

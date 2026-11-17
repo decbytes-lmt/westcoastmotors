@@ -8,7 +8,7 @@ export default {
   seoDescription: 'Harley-Davidson X440 T at West Coast Motors, Mangalore: 440 cc air-oil cooled, 27 bhp, 38 Nm, ride by wire with Rain and Road modes, 3.5" TFT, switchable rear ABS and traction control. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/harley-davidson-x440.html',
   warranty: WARRANTY, offers: OFFERS, accessories: [], hero: { image: 'hero.webp' },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['27', 'bhp', 'Max power @ 6000 rpm'], ['38', 'Nm', 'Max torque @ 4000 rpm'], ['440', 'cc', 'Air-oil cooled'], ['3.5"', 'TFT', 'Enhanced digital display']],
   featuresTitle: 'New. Beyond the everyday.',
   features: [

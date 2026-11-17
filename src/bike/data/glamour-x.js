@@ -18,7 +18,7 @@ export default {
     { title: 'Kickstart in low battery', text: 'A smart solenoid valve enables kickstart even with a low battery (stated by Hero as a world first).', image: null },
     { title: 'Smart storage space', text: 'Storage that can house 2 mobile phones and an AirPod case.', image: null },
     { title: 'Enhanced riding comfort', text: 'Comfortable riding posture for relaxed back and arms.', image: null },
-    { title: 'Head-turning style', text: 'Muscular build and sporty graphics, made to be noticed.', image: null },
+    { title: 'Head-turning style', text: 'Muscular build and sporty graphics, made to be noticed.', image: 'feat-style.webp' },
     { title: 'Aerodynamic visor', text: 'Dynamic visor design to reduce wind resistance and enhance rider stability.', image: null },
   ],
   variants: [

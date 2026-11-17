@@ -53,7 +53,7 @@ export default {
         { name: 'Pro Black', hex: '#0d0d10', image: 'colour-pro-black.webp' },
         { name: 'Pro Red', hex: '#d3202a', image: 'colour-pro-red.webp' },
       ] },
-    { id: 'standard', name: 'Standard', price: null, blurb: 'Colours not yet published by Hero.', colours: [] },
+    { id: 'standard', name: 'Standard', image: 'standard-coming-soon.webp', price: null, blurb: 'Colours not yet published by Hero.', colours: [] },
   ],
 
   // Key features, grouped. Only features Hero lists for this model.
