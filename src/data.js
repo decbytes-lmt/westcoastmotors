@@ -397,3 +397,29 @@ EV.filter(m => /VX2/.test(m.name) && !/Knight/.test(m.name)).forEach(m => {
 const slugify = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 PETROL.forEach(m => { m.page = 'petrol'; m.slug = slugify(m.name); if (CARD[m.slug]) m.image = CARD[m.slug] })
 EV.forEach(m => { m.page = 'ev'; m.slug = slugify(m.name) })
+
+// ---- Front (card) images: side-view studio shots on grey. Files in public/images/. ----
+// Matched by model name. VIDA V2 Lite has no photo yet: add one, then add a line below.
+const FRONT = [
+  [/Knight Edition/, 'vx2-plus-knight-front.webp'],
+  [/VX2 Go/, 'vx2-go-front.webp'],
+  [/VX2 Plus/, 'vx2-plus-front.webp'],
+  [/V2 Plus/, 'v2-plus-front.webp'],
+  [/V2 Pro/, 'v2-pro-front.webp'],
+]
+EV.forEach(m => { const f = FRONT.find(([re]) => re.test(m.name)); if (f) m.image = f[1] })
+
+// ---- Group variants into main models: one card per model, variants inside (tabs on the model page) ----
+const FAMILY = [
+  [/Knight Edition/, 'VIDA VX2 Plus Knight Edition'],
+  [/VX2 Go/, 'VIDA VX2 Go'],
+  [/VX2 Plus/, 'VIDA VX2 Plus'],
+]
+EV.forEach(m => {
+  const f = FAMILY.find(([re]) => re.test(m.name))
+  m.family = f ? f[1] : m.name                                  // main model shown on the card
+  m.variant = f ? m.name.replace(/^VIDA VX2 /, '') : ''         // e.g. 'Go 2.2 kWh RQ'
+})
+
+// ---- EV prices: false = every EV amount shows '-'. Set true to show prices again (they are all still in this file). ----
+export const SHOW_EV_PRICES = false

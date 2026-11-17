@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, VX2_PLUS, VX2_GO, VIDA_COMPARE, VIDA_BUY, waLink } from './data.js'
+import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, VX2_PLUS, VX2_GO, VIDA_COMPARE, VIDA_BUY, SHOW_EV_PRICES, waLink } from './data.js'
 
 const KEY = 'wcm-intro-seen'
 const P = {
@@ -247,6 +247,35 @@ function RideSelector({ go }) {
 }
 
 /* ---------- Dedicated pages: /petrol and /ev ---------- */
+// EV prices are hidden (shown as '-') while SHOW_EV_PRICES is false in data.js
+const px = v => (SHOW_EV_PRICES ? v : '-')
+// Group EV variants into main models: one card per model, variants inside
+const groupEv = list => {
+  const g = new Map()
+  list.forEach(m => { const f = g.get(m.family) || { key: m.family, name: m.family, cat: m.cat, variants: [] }; f.variants.push(m); g.set(m.family, f) })
+  return [...g.values()]
+}
+function EvCard({ f, i }) {
+  const [k, setK] = useState(0)
+  const m = f.variants[k], multi = f.variants.length > 1
+  const rows = m.specs.slice(0, 4)
+  const href = `#/${m.page}/${m.slug}`
+  return (
+    <article className="card pcard" style={{ '--i': i % 12 }}>
+      {m.tag && <span className="tagnew">{m.tag}</span>}
+      <a className="img" href={href} aria-label={'View ' + f.name}>{m.image ? <img src={`./images/${m.image}`} alt={f.name} loading="lazy" /> : <span>Image</span>}</a>
+      <small>{m.kind} · {m.cat}</small><b><a href={href}>{f.name}</a></b>
+      {multi && <div className="vpills" role="tablist" aria-label={f.name + ' variants'}>{f.variants.map((v, j) => <button key={v.slug} type="button" role="tab" aria-selected={j === k} className={j === k ? 'on' : ''} onClick={() => setK(j)}>{v.variant.replace(' kWh', '')}</button>)}</div>}
+      <dl className="specs">{rows.map(([a, b]) => <div key={a}><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+      <div className="price-row"><span>Ex-showroom price</span><b className={'price' + (SHOW_EV_PRICES && m.price ? '' : ' empty')}>{SHOW_EV_PRICES && m.price ? m.price : '-'}</b></div>
+      <div className="card-act">
+        <a className="btn sm" href={href}>View details</a>
+        <a className="more-link" href={testRide(m.name)} target="_blank" rel="noreferrer">Test ride <Icon n="right" size={14} /></a>
+      </div>
+    </article>
+  )
+}
+
 function ModelCard({ m, i }) {
   const rows = m.specs.slice(0, m.kind === 'Electric scooter' ? 4 : 3)
   const href = `#/${m.page}/${m.slug}`
@@ -269,13 +298,16 @@ function ModelCard({ m, i }) {
 const DOTS = [['lime', '#b6e03a'], ['teal', '#0f9d9a'], ['cyan', '#22d3ee'], ['purple', '#5b21b6'], ['gold', '#d4a017'], ['nexus', '#1d4ed8'], ['blue', '#2563eb'], ['red', '#dc2626'], ['orange', '#f97316'], ['yellow', '#facc15'], ['green', '#16a34a'], ['maroon', '#7f1d1d'], ['silver', '#c0c4cc'], ['gun metal', '#4b5563'], ['grey', '#6b7280'], ['gray', '#6b7280'], ['white', '#f3f4f6'], ['black', '#111827']]
 const dot = n => { const l = n.toLowerCase(); const hit = [...new Set(DOTS.filter(([k]) => l.includes(k)).map(([, c]) => c))].slice(0, 2); return hit.length === 2 ? `linear-gradient(135deg,${hit[0]} 50%,${hit[1]} 50%)` : (hit[0] || '#9ca3af') }
 
-function ModelPage({ m }) {
+function ModelPage({ m: m0 }) {
+  const [m, setM] = useState(m0)
   const ev = m.page === 'ev'
+  const sibs = ev ? EV.filter(x => x.family === m.family) : [m]
+  const pickVariant = v => { setM(v); try { history.replaceState(null, '', '#/ev/' + v.slug) } catch (e) {} document.title = `${v.name} | ${v.kind} | West Coast Motors` }
   const [tab, setTab] = useState('')
   const tiles = useRef(null)
   const hasF = m.features.length > 0, hasC = m.colours.length > 0
   const tabs = [hasF && ['features', 'Features'], hasC && ['colours', 'Colours'], ['specs', 'Specifications'], ['enquire', 'Enquire']].filter(Boolean)
-  const pool = (ev ? EV : PETROL).filter(x => x.name !== m.name)
+  const pool = ev ? groupEv(EV).filter(f => f.key !== m.family) : PETROL.filter(x => x.name !== m.name)
   const related = [...pool.filter(x => x.cat === m.cat), ...pool.filter(x => x.cat !== m.cat)].slice(0, 4)
   useEffect(() => {
     if (!('IntersectionObserver' in window)) return
@@ -296,7 +328,7 @@ function ModelPage({ m }) {
             <h1 id="mp-t" className="display rise" style={R(2)}>{m.name}</h1>
             {m.intro && <p className="pg-sub rise" style={R(3)}>{m.intro}</p>}
             {m.highlights.length > 0 && <ul className="hl rise" style={R(3)}>{m.highlights.map(h => <li key={h}>{h}</li>)}</ul>}
-            <div className="price-row big rise" style={R(4)}><span>Ex-showroom price</span><b className={'price' + (m.price ? '' : ' empty')}>{m.price || '₹ —'}</b></div>
+            <div className="price-row big rise" style={R(4)}><span>Ex-showroom price</span><b className={'price' + (!ev && m.price ? '' : ' empty')}>{ev ? '-' : (m.price || '₹ —')}</b></div>
             <div className="pg-cta rise" style={R(5)}>
               <a className="btn" href={testRide(m.name)} target="_blank" rel="noreferrer">Book a Test Ride</a>
               <a className="btn ghost" href={waLink(`Hi West Coast Motors, please share the latest price for ${m.name}.`)} target="_blank" rel="noreferrer">Ask price on WhatsApp</a>
@@ -309,6 +341,8 @@ function ModelPage({ m }) {
           <div className="stats rise" style={R(6)}>{m.stats.map(([v, u, l]) => <div className="stat" key={l}><b>{v}<small>{u}</small></b><span>{l}</span></div>)}</div>
         </div>
       </section>
+
+      {sibs.length > 1 && <section className="mp-sec tabsbar" aria-label={m.family + ' variants'}><div className="wrap"><div className="vp-tabs" role="tablist" aria-label={m.family + ' variants'}>{sibs.map(v => <button key={v.slug} type="button" role="tab" aria-selected={v === m} className={v === m ? 'on' : ''} onClick={() => pickVariant(v)}>{v.variant}{v.tag && <em>{v.tag}</em>}</button>)}</div></div></section>}
 
       <nav className="subnav" aria-label="On this page"><div className="wrap">
         <a className="back" href={'#/' + m.page}>← All {ev ? 'EV' : 'petrol'}</a>
@@ -374,7 +408,7 @@ function ModelPage({ m }) {
 
       <section className="mp-sec" aria-labelledby="r-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">Explore more</p><h2 id="r-t" className="display">You may also like</h2></div></div>
-        <div className="grid">{related.map((x, i) => <ModelCard key={x.name} m={x} i={i} />)}</div>
+        <div className="grid">{related.map((x, i) => ev ? <EvCard key={x.key} f={x} i={i} /> : <ModelCard key={x.name} m={x} i={i} />)}</div>
       </div></section>
     </div>
   )
@@ -437,7 +471,7 @@ function VxStory({ P }) {
       <section className="mp-sec" id={P.id} aria-labelledby="vp-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">{P.eyebrow}</p><h2 id="vp-t" className="display">{P.head[0]} <span>{P.head[1]}</span></h2><p className="count">{P.sub}</p></div></div>
         <div className="vp-tabs" role="tablist" aria-label={P.model + ' variants'}>{P.variants.map((x, i) => <button key={x.name} type="button" role="tab" aria-selected={i === v} className={i === v ? 'on' : ''} onClick={() => setV(i)}>{x.name}{x.tag && <em>{x.tag}</em>}</button>)}</div>
-        <div className="vp-price"><div><h3>Your VX2 {V.name} price in <span>Delhi</span></h3><small>{P.priceNote}</small></div><b>{V.delhi}</b></div>
+        <div className="vp-price"><div><h3>Your VX2 {V.name} price in <span>Delhi</span></h3><small>{SHOW_EV_PRICES ? P.priceNote : 'Ask us for the latest price in Mangalore.'}</small></div><b>{px(V.delhi)}</b></div>
         <h3 className="vp-sub">VIDA VX2 {V.name} does it all</h3>
         <div className="vx-proof vp-stats">{V.stats.map(([l, x]) => <div key={l}><b>{x}</b><span>{l}</span></div>)}</div>
         <ul className="vp-tags">{P.tags.map(t => <li key={t}>{t}</li>)}</ul>
@@ -465,9 +499,9 @@ function VxStory({ P }) {
         <div className="vc-scroll"><table className="vc">
           <thead><tr><th scope="col"><span className="sr">Feature</span></th>{P.compareCols.map(c => <th scope="col" key={c}>{c}</th>)}</tr></thead>
           <tbody>
-            {P.compare.slice(0, 10).map(([l, ...vals]) => <tr key={l}><th scope="row">{l}</th>{vals.map((x, k) => <td key={k}>{x}</td>)}</tr>)}
+            {P.compare.slice(0, 10).map(([l, ...vals]) => <tr key={l}><th scope="row">{l}</th>{vals.map((x, k) => <td key={k}>{/^Price/i.test(l) ? px(x) : x}</td>)}</tr>)}
             <tr><th scope="row">Colours</th>{P.colourRows.map((cols, k) => <td key={k}><ul className="vc-dots">{cols.map(c => <li key={c} title={c} style={{ background: dot(c) }} />)}</ul></td>)}</tr>
-            {P.compare.slice(10).map(([l, ...vals]) => <tr key={l}><th scope="row">{l}</th>{vals.map((x, k) => <td key={k}>{x}</td>)}</tr>)}
+            {P.compare.slice(10).map(([l, ...vals]) => <tr key={l}><th scope="row">{l}</th>{vals.map((x, k) => <td key={k}>{/^Price/i.test(l) ? px(x) : x}</td>)}</tr>)}
           </tbody>
         </table></div>
         <p className="fine">{P.compareNote}</p>
@@ -493,7 +527,7 @@ function VidaCompare() {
           <a href={`#/ev/${m.slug}`}>{m.cmp.title}</a>
           <ul className="vc-dots" aria-label="Colours">{m.colours.map(c => <li key={c} title={c} style={{ background: dot(c) }} />)}</ul>
         </th>)}</tr></thead>
-        <tbody>{C.rows.map(([k, l]) => <tr key={k}><th scope="row">{l}</th>{cols.map(m => <td key={m.name}>{m.cmp[k]}</td>)}</tr>)}</tbody>
+        <tbody>{C.rows.map(([k, l]) => <tr key={k}><th scope="row">{l}</th>{cols.map(m => <td key={m.name}>{k === 'delhi' ? px(m.cmp[k]) : m.cmp[k]}</td>)}</tr>)}</tbody>
       </table></div>
       <p className="fine">{C.note}</p>
     </div></section>
@@ -533,9 +567,9 @@ function VxExtras() {
       </div></section>
       <section className="vx-baas" aria-labelledby="vx-b" style={{ backgroundImage: `linear-gradient(90deg,rgba(6,25,46,.92),rgba(6,25,46,.35)),url(./images/vx2-duo.jpg)` }}><div className="wrap">
         <p className="eyebrow">VIDA BaaS · Battery as a Service</p>
-        <h2 id="vx-b" className="display">Starting @ just <span>{B.from}</span></h2>
+        <h2 id="vx-b" className="display">Starting @ just <span>{px(B.from)}</span></h2>
         <p className="vx-big">{B.copy}</p>
-        <p className="vx-big">With BaaS @ just <b>{B.with}</b> &amp; per km cost <b>{B.perKm}</b></p>
+        <p className="vx-big">With BaaS @ just <b>{px(B.with)}</b> &amp; per km cost <b>{px(B.perKm)}</b></p>
         <p className="fine light">{B.note}</p>
         <div className="pg-cta"><a className="btn" href={waLink('Hi West Coast Motors, tell me about VIDA BaaS offer.')} target="_blank" rel="noreferrer">Ask about BaaS</a></div>
       </div></section>
@@ -548,7 +582,8 @@ function RidePage({ kind, go }) {
   const list = ev ? EV : PETROL
   const kinds = ['All', ...(ev ? EV_CATS : PETROL_CATS)]
   const [filter, setFilter] = useState('All')
-  const shown = filter === 'All' ? list : list.filter(m => m.cat === filter)
+  const items = ev ? groupEv(list) : list
+  const shown = filter === 'All' ? items : items.filter(m => m.cat === filter)
   const [sw, setSw] = useState(kind)
   const swChoose = m => { setSw(m); if (m !== kind) setTimeout(() => go(m), reduced() ? 0 : 500) }
   const R = n => ({ '--d': n })
@@ -581,10 +616,10 @@ function RidePage({ kind, go }) {
             <div><h2 id="models-t" className="display">{ev ? 'Our EV Range' : 'Our Petrol Range'}</h2><p className="count">{shown.length} {shown.length === 1 ? 'model' : 'models'}</p></div>
             {kinds.length > 0 && <div className="filters" role="group" aria-label="Filter models">{kinds.map(k => <button type="button" key={k} className={k === filter ? 'on' : ''} aria-pressed={k === filter} onClick={() => setFilter(k)}>{k}</button>)}</div>}
           </div>
-          <div className="grid" key={filter}>{shown.map((m, i) => <ModelCard key={m.name} m={m} i={i} />)}</div>
+          <div className="grid" key={filter}>{shown.map((m, i) => ev ? <EvCard key={m.key} f={m} i={i} /> : <ModelCard key={m.name} m={m} i={i} />)}</div>
           {!ev && <p className="fine">Specifications as published by Hero MotoCorp. Prices will be updated soon. Contact the showroom for the latest price and availability.</p>}
           {ev && <p className="fine">*Range and speed as published by VIDA (certified / IDC). Ask our team about charging, battery and EV service support.</p>}
-          {ev && <p className="fine">{VX2_INFO.priceNote}</p>}
+          {ev && SHOW_EV_PRICES && <p className="fine">{VX2_INFO.priceNote}</p>}
         </div>
       </section>
 
