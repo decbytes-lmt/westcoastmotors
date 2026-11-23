@@ -1,4 +1,4 @@
-// EDIT THIS FILE to change the Sales, Insurance, Services, About Us and Staff sections on the home page.
+// EDIT THIS FILE to change the Sales, Insurance, Services, and About Us sections on the home page.
 // No rebuild logic is needed: change the text, run the build, upload. Leave a field '' to hide it.
 // Anything marked DRAFT is placeholder wording written by us: replace it with West Coast Motors' real details.
 
@@ -36,16 +36,4 @@ export const ABOUT = {
   ],
   photo: null,             // e.g. 'showroom.jpg' (put the file in public/images/)
   facts: [],               // e.g. [['2005', 'Serving Mangalore since'], ['10,000+', 'Happy riders']]. Empty = hidden.
-}
-
-// Staff (inside About Us). Add, remove or reorder people. Photo: put a file in public/images/staff/ and set photo: 'name.jpg'.
-export const STAFF = {
-  title: 'Meet the team',
-  intro: 'The people who will help you choose, finance and service your ride.',
-  people: [
-    { name: '', role: 'Sales Manager', photo: null, phone: '' },
-    { name: '', role: 'Service Manager', photo: null, phone: '' },
-    { name: '', role: 'Sales Executive', photo: null, phone: '' },
-    { name: '', role: 'Service Advisor', photo: null, phone: '' },
-  ],   // DRAFT: roles are placeholders; names show "Name to be added" until filled
 }

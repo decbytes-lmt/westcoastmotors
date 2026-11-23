@@ -12,6 +12,30 @@ function Photo({ d, file, label, className = '' }) {
     : <div className={'bp-ph ' + className} role="img" aria-label={label + ' (photo to be added)'}><span>{label}</span><small>Photo coming soon</small></div>
 }
 
+
+// Autoplaying, silent, looping video with NO controls (like Hero's own site). Plays only while on screen; picks a phone-sized file if given.
+function AutoVideo({ src, mobile, poster, label, className = '', eager = false }) {
+  const ref = useRef(null)
+  const mq = '(max-width:700px)'
+  const [small, setSmall] = useState(() => !!mobile && typeof matchMedia !== 'undefined' && matchMedia(mq).matches)
+  useEffect(() => {
+    if (!mobile) return
+    const m = matchMedia(mq), f = () => setSmall(m.matches); f()
+    m.addEventListener ? m.addEventListener('change', f) : m.addListener(f)
+    return () => (m.removeEventListener ? m.removeEventListener('change', f) : m.removeListener(f))
+  }, [mobile])
+  const file = small && mobile ? mobile : src
+  useEffect(() => {
+    const v = ref.current; if (!v) return
+    v.muted = true; v.defaultMuted = true
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!('IntersectionObserver' in window)) { v.play().catch(() => {}); return }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const p = v.play(); p && p.catch(() => {}) } else v.pause() }), { threshold: 0.2 })
+    io.observe(v); return () => io.disconnect()
+  }, [file])
+  return <video ref={ref} key={file} className={'bp-auto ' + className} src={file} poster={poster} muted loop playsInline preload={eager ? 'auto' : 'none'} disablePictureInPicture disableRemotePlayback controlsList="nodownload noremoteplayback" tabIndex={-1} aria-label={label} />
+}
+
 // The site uses HashRouter, so a plain href="#section" would change the route and send the visitor home. Scroll instead.
 function onAnchor(e) {
   const a = e.target.closest && e.target.closest('a[href^="#"]')
@@ -47,6 +71,18 @@ function useReveal(dep) {
   })
 }
 
+
+// Gentle parallax on the stage media (skipped for reduced motion and small screens).
+function useStageParallax(dep) {
+  useEffect(() => {
+    const st = document.querySelector('.bp-stage'); if (!st || matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(max-width:700px)').matches) return
+    let raf = 0
+    const on = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { const y = Math.min(Math.max(scrollY, 0), 900); st.style.setProperty('--py', (y * 0.18).toFixed(1)); st.style.setProperty('--ps', (y / 900 * 0.06).toFixed(3)) }) }
+    addEventListener('scroll', on, { passive: true }); on()
+    return () => { removeEventListener('scroll', on); cancelAnimationFrame(raf) }
+  }, [dep])
+}
+
 export default function BikePage({ d: base, start }) {
   const models = base.models || null
   const [mid, setMid] = useState(start || (models ? models[0].id : null))
@@ -73,6 +109,7 @@ export default function BikePage({ d: base, start }) {
   }, [mid])
   const pickVariant = id => { setVid(id); const c = coloursOf(d.variants.find(v => v.id === id)); setColName(c[0] ? c[0].name : '') }
   useReveal()
+  useStageParallax(d.slug + (mid || ''))
   useProgress()
 
   useEffect(() => {
@@ -263,15 +300,35 @@ export default function BikePage({ d: base, start }) {
           <li key={f} data-rv style={{ '--i': i % 4 }}><a href={IMG(d.folder || d.slug)(f)} target="_blank" rel="noreferrer" aria-label={'Open photo: ' + l}><img className="bp-photo" src={IMG(d.folder || d.slug)(f)} alt={l} loading="lazy" /></a></li>) })}</ul>
       </div></section>
     ),
+    stage: () => {
+      const fdir = IMG(d.folder || d.slug), hv = d.heroVideo || {}
+      const vsrc = d.film ? './images/films/' + d.film + '.mp4' : hv.file ? fdir(hv.file) : null
+      const vposter = d.film ? './images/films/' + d.film + '.jpg' : hv.poster ? fdir(hv.poster) : undefined
+      const vmob = hv.mobile ? (hv.mobile.startsWith('./') ? hv.mobile : fdir(hv.mobile)) : null
+      const sup = d.stage === 'super'
+      if (!vsrc && !d.banner) return null
+      return (
+        <section key="stage" className={'bp-stage' + (sup ? ' super' : '') + (vsrc ? ' vid' : ' img')} aria-label={d.name + ' showcase'}>
+          <div className="bp-stage-media">
+            {vsrc
+              ? <AutoVideo src={vsrc} mobile={vmob} poster={vposter} label={d.name + ' video'} eager />
+              : <picture>{d.bannerMobile && <source media="(max-width:700px)" srcSet={fdir(d.bannerMobile)} />}<img src={fdir(d.banner)} alt={d.name + ' banner'} /></picture>}
+            {sup && <i className="bp-stage-shade" />}
+          </div>
+          {sup && <div className="bp-stage-cap"><div className="wrap">
+            <small>{d.name}</small><strong>{d.tagline}</strong><em aria-hidden="true">Scroll</em>
+          </div></div>}
+        </section>
+      )
+    },
     videos: () => d.videos && d.videos.length > 0 && (
       <section key="videos" className="bp-sec dark" id="videos"><div className="wrap">
         <p className="bp-eyebrow">In action</p><h2 className="bp-h2">Watch it <em>work</em></h2>
-        <ul className="bp-vid">{d.videos.map((v, i) => (
-          <li key={v.file} data-rv style={{ '--i': i % 3 }}>
-            <video controls muted playsInline loop preload="none" poster={v.poster ? IMG(d.folder || d.slug)(v.poster) : undefined} aria-label={v.title}><source src={IMG(d.folder || d.slug)(v.file)} type="video/mp4" /></video>
+        <ul className={'bp-vid' + (d.videos.length % 2 ? ' odd' : '')}>{d.videos.map((v, i) => (
+          <li key={v.file} data-rv style={{ '--i': i % 2 }}>
+            <div className="bp-vid-box"><AutoVideo src={IMG(d.folder || d.slug)(v.file)} poster={v.poster ? IMG(d.folder || d.slug)(v.poster) : undefined} label={v.title} /></div>
             <b>{v.title}</b>{v.text && <p>{v.text}</p>}
           </li>))}</ul>
-        <p className="bp-fine light">Videos load only when you press play.</p>
       </div></section>
     ),
     related: () => related.length > 0 && (
@@ -299,7 +356,10 @@ export default function BikePage({ d: base, start }) {
   const NAVLBL = { highlights: 'Highlights', overview: 'Overview', features: 'Features', colours: 'Colours', variants: 'Variants', compare: 'Compare', specs: 'Specifications', finance: 'Price', gallery: 'Gallery', videos: 'Videos', accessories: 'Accessories', testride: 'Test Ride', faq: 'FAQ' }
   const NAVID = { testride: 'test-ride' }
   const layout0 = d.layout || DEFAULT_LAYOUT
-  const layout = d.banner && !layout0.includes('banner') ? layout0.flatMap(k => k === 'testride' ? ['banner', k] : [k]) : layout0
+  const hasStageVideo = !!(d.film || (d.heroVideo && d.heroVideo.file))
+  const stageUsesBanner = !hasStageVideo && !!d.banner
+  const layout1 = d.banner && !stageUsesBanner && !layout0.includes('banner') ? layout0.flatMap(k => k === 'testride' ? ['banner', k] : [k]) : layout0.filter(k => !(stageUsesBanner && k === 'banner'))
+  const layout = (hasStageVideo || d.banner) && !layout1.includes('stage') ? layout1.flatMap(k => k === 'hero' ? ['stage', k] : [k]) : layout1
   const secOf = k => k.startsWith('sec:') ? (d.sections || []).find(s => s.id === k.slice(4)) : null
   const rendered = layout.map(k => [k, secOf(k) ? secBlock(secOf(k)) : B[k] && B[k]()]).filter(([, el]) => el)
   const navItems = rendered.filter(([k]) => NAVLBL[k] || (secOf(k) && secOf(k).nav)).map(([k]) => secOf(k) ? [secOf(k).id, secOf(k).nav] : [NAVID[k] || k, NAVLBL[k]])

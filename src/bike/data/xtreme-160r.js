@@ -1,4 +1,5 @@
 // XTREME 160R: copied from heromotocorp.com (Xtreme 160R page). PRICES: `price: null`; Hero's Delhi prices are never used.
+// FEATURE PHOTOS: Wheels, Engine, Suspension and Transmission cards use the four photos you named that way; their text is from the spec table, not Hero's feature copy.
 // PHOTOS: Stealth Black is the colour shown on Hero's page; Matt Pearl White matched by looks. Folder: public/images/xtreme-160r/
 import { WARRANTY, OFFERS, FINANCE, faq } from './_std.js'
 
@@ -7,10 +8,17 @@ export default {
   seoDescription: 'Hero Xtreme 160R at West Coast Motors, Mangalore: 163.2 cc, LED headlight, 276 mm petal front disc, monoshock, USB charger and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/xtreme-160r.html',
   warranty: WARRANTY, offers: OFFERS, finance: FINANCE, accessories: [], banner: 'banner.webp', hero: { image: null },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  film: 'xtreme-160r', layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['163.2', 'cc', 'Displacement'], ['15', 'PS', 'Max power @ 8500 rpm'], ['14', 'Nm', 'Max torque @ 6500 rpm'], ['5', 'speed', 'Constant mesh gearbox']],
   featuresTitle: 'Xtreme 160R features',
   features: [
+    { title: 'Alloy wheels', text: 'Alloy wheels with 100/80-17 front and 130/70 R17 rear tubeless tyres.', image: 'feat-wheels.webp' },
+    { title: 'Engine', text: '163.2 cc, air-cooled, 4-stroke, 2 valve: 15 PS and 14 Nm.', image: 'feat-engine.webp' },
+    { title: 'Suspension', text: 'Telescopic front fork and a 7-step adjustable monoshock at the rear.', image: 'feat-suspension.webp' },
+    { title: 'Transmission', text: '5-speed constant mesh gearbox with a multiplate wet clutch.', image: 'feat-transmission.webp' },
+    { title: 'Dimensions', text: 'Length 2029 mm, width 793 mm, height 1052 mm, wheelbase 1327 mm and seat height 790 mm.', image: 'feat-dimensions.webp' },
+    { title: 'Electricals', text: 'LED headlight with position lamps, LED tail light and LED winkers, with a USB charger.', image: 'feat-electricals.webp' },
+    { title: 'Brakes', text: '276 mm petal disc at the front, with a 220 mm petal disc or 130 mm drum at the rear.', image: 'feat-brakes.webp' },
     { title: 'Stealth Black Color', text: 'The race-ready look is now complete.', image: null },
     { title: 'Sporty Muffler Cover', text: 'Let your speed make the noise.', image: null },
     { title: 'New LED Tail Lamp', text: 'Get noticed, even in low light conditions.', image: null },

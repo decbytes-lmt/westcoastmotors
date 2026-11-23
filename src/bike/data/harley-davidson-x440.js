@@ -8,7 +8,7 @@ export default {
   seoDescription: 'Harley-Davidson X440 at West Coast Motors, Mangalore: 440 cc air-oil cooled, 27 bhp, 38 Nm, USD forks, trellis frame, 3.5" TFT, switchable traction control. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/harley-davidson-x440.html',
   warranty: WARRANTY, offers: OFFERS, accessories: [], hero: { image: 'hero.webp' },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  layout: ['hero', 'offers', 'quick', 'features', 'videos', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['27', 'bhp', 'Max power @ 6000 rpm'], ['38', 'Nm', 'Max torque @ 4000 rpm'], ['440', 'cc', 'Air-oil cooled'], ['43', 'mm', 'KYB USD forks']],
   featuresTitle: 'The Harley-Davidson X440',
   features: [
@@ -31,7 +31,11 @@ export default {
   ],
   variantNote: 'Hero lists the X440 S and the X440 Vivid. Prices are not shown yet; ask us for the Mangalore price of each.',
   colourNote: 'Hero names seven colours: Matte Black, Baja Orange, Metallic Thick Red, Metallic Dark Silver, Mustard, Goldfish Silver and Mustard Denim. We show the six photos supplied (no Mustard Denim photo yet). Photos were matched to names by looks, please confirm.',
-  gallery: [
+  stage: 'super', heroVideo: { file: 'teaser.mp4', poster: 'teaser-poster.jpg' },
+  videos: [
+    { title: 'Harley-Davidson film', text: 'The Harley-Davidson story, as shown by Hero.', file: 'film.mp4', poster: 'film-poster.jpg' },
+  ],
+  gallery: [{ file: 'g-rider.webp', label: 'X440 on the road' }, 
     { file: 'g-01.webp', label: 'X440 in orange and black' }, { file: 'g-02.webp', label: 'X440 in red' }, { file: 'g-03.webp', label: 'X440 in silver' }, { file: 'g-04.webp', label: 'X440 lineup' },
     { file: 'g-05.webp', label: 'X440 in mustard' }, { file: 'g-07.webp', label: 'X440 in the city' }, { file: 'g-09.webp', label: 'X440 on the road' }, { file: 'g-10.webp', label: 'X440 tank close-up' },
   ],

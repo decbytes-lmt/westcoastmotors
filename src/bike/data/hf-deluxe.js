@@ -1,5 +1,6 @@
 // HF DELUXE: copied from heromotocorp.com (HF Deluxe page). Hero shows features/specs for the selected variant (Pro).
 // PRICES: `price: null` everywhere. Fill the Mangalore ex-showroom price per variant when ready.
+// GALLERY: Hero's six HF Deluxe feature slides (text is baked into the pictures; they show the standard HF Deluxe, e.g. halogen headlamp) + user's trail photo. Banner = user's 'Samjhauta nahi' banner.
 // PHOTOS: the four Pro colours were matched to names by looks; check them. Folder: public/images/hf-deluxe/
 import { WARRANTY, OFFERS, FINANCE, faq } from './_std.js'
 
@@ -8,7 +9,7 @@ export default {
   seoDescription: 'HF Deluxe at West Coast Motors, Mangalore: 97.2 cc, xSENS fuel injection, LED headlamp on the Pro, i3S on selected variants and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/practical/hf-deluxe.html',
   warranty: WARRANTY, offers: OFFERS, finance: FINANCE, accessories: [], hero: { image: null },
-  layout: ['hero', 'offers', 'quick', 'highlights', 'overview', 'features', 'colours', 'variants', 'compare', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  layout: ['hero', 'offers', 'quick', 'highlights', 'overview', 'features', 'colours', 'variants', 'compare', 'videos', 'gallery', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
 
   quick: [['72', 'kmpl', 'Mileage, as stated by Hero'], ['97.2', 'cc', 'Displacement'], ['5.9', 'kW', 'Max power @ 8000 rpm'], ['8.05', 'Nm', 'Max torque @ 6000 rpm']],
   overview: { title: 'Smarter every day', intro: 'The HF Deluxe Pro adds an LED headlamp with HIPL and new sharp graphics to the HF Deluxe’s xSENS fuel-injected, low running cost formula.', images: ['ov-1.webp', 'ov-2.webp'] },
@@ -20,6 +21,8 @@ export default {
     { title: 'Mileage', text: 'Ensuring low running cost.', image: 'feat-mileage.webp' },
     { title: 'New Graphics', text: 'Sharp and edgy graphics offer a bold and contemporary design.', image: 'feat-graphics.webp' },
   ],
+  heroVideo: { file: 'banner-film.mp4', poster: 'banner-film-poster.jpg' },
+  gallery: [{ file: 'g-forest.webp', label: 'HF Deluxe on the trail' }, { file: 'slide-1.webp', label: 'Side-stand cut-off, electric + kick start, 9.6 L tank' }, { file: 'slide-2.webp', label: 'Digital console' }, { file: 'slide-3.webp', label: 'Clean design, halogen headlamp, compact tank' }, { file: 'slide-4.webp', label: 'Long soft seat, upright handlebar, 110 kg kerb weight' }, { file: 'slide-5.webp', label: '97.2 cc engine, 4-speed gearbox' }, { file: 'slide-6.webp', label: 'Alloy wheels with tubeless tyres, drum brakes with CBS' }],
   variants: [
     { id: 'all-black', name: 'All Black OBD2B', price: null, colours: [], image: 'all-black.webp' },
     { id: 'pro', name: 'Pro', price: null, colours: [

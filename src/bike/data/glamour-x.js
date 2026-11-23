@@ -7,7 +7,7 @@ export default {
   seoDescription: 'Hero Glamour X at West Coast Motors, Mangalore: 124.7 cc, cruise control, 3 ride modes, multicolour console, panic brake alert and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/glamour-x.html',
   warranty: WARRANTY, offers: OFFERS, finance: FINANCE, accessories: [], banner: 'banner.webp', hero: { image: null },
-  layout: ['hero', 'offers', 'quick', 'highlights', 'features', 'colours', 'variants', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  film: 'glamour-x', heroVideo: { mobile: './images/glamour-x/banner-film.mp4' }, layout: ['hero', 'offers', 'quick', 'highlights', 'features', 'videos', 'colours', 'variants', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['65', 'kmpl', 'Mileage with E20 fuel, as stated by Hero'], ['124.7', 'cc', 'Displacement'], ['8.5', 'kW', 'Max power @ 8250 rpm'], ['10.5', 'Nm', 'Max torque @ 6500 rpm']],
   highlights: [['Muscular Design'], ['Unmatched Performance', '11.4 BHP (8.5 kW) power @ 8250 rpm'], ['Intelligent Ride Technology', 'Adaptive display with 60+ features'], ['Superior Comfort', 'Long and wide seat'], ['Advanced Safety', 'Panic Brake Alert'], ['Cruise Control', 'First in segment technology that maintains your pace for steady rides, as stated by Hero'], ['3 Ride Modes'], ['10.7 cm Multicolour Console'], ['All-LED Setup']],
   featuresTitle: 'Discover what makes Glamour X futuristic',
@@ -20,6 +20,13 @@ export default {
     { title: 'Enhanced riding comfort', text: 'Comfortable riding posture for relaxed back and arms.', image: null },
     { title: 'Head-turning style', text: 'Muscular build and sporty graphics, made to be noticed.', image: 'feat-style.webp' },
     { title: 'Aerodynamic visor', text: 'Dynamic visor design to reduce wind resistance and enhance rider stability.', image: null },
+  ],
+  videos: [
+    { title: 'Glamour X', text: 'The futuristic 125.', file: 'film.mp4', poster: 'film-poster.jpg' },
+    { title: '60+ features', text: 'Adaptive display.', file: 'features.mp4', poster: 'features-poster.jpg' },
+    { title: 'All-LED setup', text: 'Lighting.', file: 'led.mp4', poster: 'led-poster.jpg' },
+    { title: 'Bluetooth', text: 'Connected console.', file: 'bluetooth.mp4', poster: 'bluetooth-poster.jpg' },
+    { title: 'Cruise control', text: 'Hold a set speed.', file: 'cruise.mp4', poster: 'cruise-poster.jpg' },
   ],
   variants: [
     { id: 'drum', name: 'Drum Brake', price: null },

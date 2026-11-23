@@ -1,3 +1,4 @@
+// VIDEOS: 'hero-video_1.mp4' assumed to be the Karizma hero film (please confirm).
 // KARIZMA XMR: copied from heromotocorp.com (Karizma XMR page) and the Hero Genuine Accessories catalogue (part numbers as printed there). PRICES: `price: null`; Hero's Delhi price is never used.
 // PHOTOS: Hero's page names Phantom Black, Turbo Red and Iconic Yellow, and lists the variants XMR Top and XMR Combat. Colour photos are the studio shots supplied by the shop (Combat Grey named by the supplied file).
 import { WARRANTY, OFFERS, faq } from './_std.js'
@@ -7,7 +8,7 @@ export default {
   seoDescription: 'Hero Karizma XMR at West Coast Motors, Mangalore: 210 cc 4V DOHC liquid-cooled, 25.5 PS, 6-speed with slip and assist clutch, USD forks, TFT cluster, dual channel ABS and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/karizma-xmr.html',
   warranty: WARRANTY, offers: OFFERS, hero: { image: 'hero.webp' },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  stage: 'super', heroVideo: { file: 'hero.mp4', poster: 'hero-poster.jpg' }, layout: ['hero', 'offers', 'quick', 'features', 'videos', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['25.5', 'PS', 'Max power @ 9250 rpm'], ['20.4', 'Nm', 'Max torque @ 7250 rpm'], ['210', 'cc', '4V DOHC liquid cooled'], ['320', 'mm', 'Front petal disc brake']],
   featuresTitle: 'Pure beauty. Pure beast.',
   features: [
@@ -33,6 +34,9 @@ export default {
   ],
   variantNote: 'Hero lists the Karizma XMR Top and the Karizma XMR Combat. Prices are not shown yet; ask us for the Mangalore price of each.',
   colourNote: 'Hero’s page names Phantom Black, Turbo Red and Iconic Yellow for the XMR Top; the XMR Combat photo is the grey bike. Ask us which colour is in stock.',
+  videos: [
+    { title: 'Karizma XMR', text: 'Hero film.', file: 'film.mp4', poster: 'film-poster.jpg' },
+  ],
   gallery: [
     { file: 'g-1.webp', label: 'Karizma XMR in the city' }, { file: 'g-2.webp', label: 'Karizma XMR, side view' }, { file: 'g-3.webp', label: 'Karizma XMR on the road' },
     { file: 'g-4.webp', label: 'Karizma XMR in motion' }, { file: 'g-5.webp', label: 'Karizma XMR cornering' }, { file: 'g-6.webp', label: 'Karizma XMR' },

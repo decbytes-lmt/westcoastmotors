@@ -11,7 +11,7 @@ export default {
   source: 'https://www.heromotocorp.com/en-in/motorcycles/passion-plus.html',
   warranty: WARRANTY, offers: OFFERS, finance: FINANCE, accessories: [], banner: 'banner.webp',
   hero: { image: null, bike: 'g-1.webp' },
-  layout: ['hero', 'offers', 'quick', 'overview', 'features', 'variants', 'compare', 'sec:colours-note', 'gallery', 'specs', 'finance', 'steps', 'testride', 'faq', 'related'],
+  film: 'passion-plus', layout: ['hero', 'offers', 'quick', 'overview', 'features', 'variants', 'compare', 'sec:colours-note', 'gallery', 'specs', 'finance', 'steps', 'testride', 'faq', 'related'],
   quick: [['70', 'kmpl', 'Mileage, as stated by Hero'], ['97.2', 'cc', 'Displacement'], ['5.9', 'kW', 'Max power @ 8000 rpm'], ['8.05', 'Nm', 'Max torque @ 6000 rpm']],
   overview: { title: 'Bold dual-tone, built to last', intro: 'The all-new Passion+ comes with bold dual-tone graphics, an LED projector headlamp and a disc brake option, on a fuel-injected 97.2 cc engine.', images: ['banner.webp'] },
   featuresTitle: 'Discover what makes Passion+ lovable',

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import ChatWidget from './chat/ChatWidget.jsx'
 import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, VX2_PLUS, VX2_GO, VIDA_COMPARE, VIDA_BUY, SHOW_EV_PRICES, waLink } from './data.js'
 
 const KEY = 'wcm-intro-seen'
@@ -370,6 +371,7 @@ function ModelPage({ m: m0 }) {
         <section className="mp-sec" id="colours" aria-labelledby="c-t"><div className="wrap">
           <div className="sec-head"><div><p className="eyebrow">Colours</p><h2 id="c-t" className="display">Pick your colour</h2></div></div>
           <ul className="swatches">{m.colours.map(c => <li key={c}><i style={{ background: dot(c) }} /><span>{c}</span></li>)}</ul>
+          {m.colourPics && <ColourPics m={m} />}
           {m.colourImg && <img className="v2-lineup" src={`./images/${m.colourImg}`} alt={m.name + ' colour range'} loading="lazy" />}
         </div></section>
       )}
@@ -448,6 +450,19 @@ function VxSavings({ P }) {
     </div></section>
   )
 }
+function ColourPics({ m }) {
+  const names = m.colours.filter(c => m.colourPics[c])
+  const [i, setI] = useState(0)
+  const c = names[Math.min(i, names.length - 1)]
+  if (!c) return null
+  return (
+    <div className="vcp-stage">
+      <b className="vcp-name" aria-live="polite">{c}</b>
+      <img src={`./images/${m.colourPics[c]}`} alt={m.name + ' in ' + c} loading="lazy" />
+      <ul className="vcp-dots" role="tablist" aria-label={m.name + ' colours'}>{names.map((x, k) => <li key={x}><button type="button" role="tab" aria-selected={k === i} aria-label={x} title={x} className={k === i ? 'on' : ''} style={{ background: dot(x) }} onClick={() => setI(k)} /></li>)}</ul>
+    </div>
+  )
+}
 function VxColourPick({ P, V }) {
   const C = P.colourPick
   const [i, setI] = useState(0)
@@ -469,6 +484,7 @@ function VxStory({ P }) {
   return (
     <>
       <section className="mp-sec" id={P.id} aria-labelledby="vp-t"><div className="wrap">
+        {P.banner && <img className="vp-banner" src={`./images/${P.banner}`} alt={P.eyebrow} loading="lazy" />}
         <div className="sec-head"><div><p className="eyebrow">{P.eyebrow}</p><h2 id="vp-t" className="display">{P.head[0]} <span>{P.head[1]}</span></h2><p className="count">{P.sub}</p></div></div>
         <div className="vp-tabs" role="tablist" aria-label={P.model + ' variants'}>{P.variants.map((x, i) => <button key={x.name} type="button" role="tab" aria-selected={i === v} className={i === v ? 'on' : ''} onClick={() => setV(i)}>{x.name}{x.tag && <em>{x.tag}</em>}</button>)}</div>
         <div className="vp-price"><div><h3>Your VX2 {V.name} price in <span>Delhi</span></h3><small>{SHOW_EV_PRICES ? P.priceNote : 'Ask us for the latest price in Mangalore.'}</small></div><b>{px(V.delhi)}</b></div>
@@ -479,18 +495,18 @@ function VxStory({ P }) {
 
       <section className="mp-sec alt" aria-labelledby="vl-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">{P.lifeTitle}</p><h2 id="vl-t" className="display">Roomy. Steady. <span>Ready.</span></h2></div></div>
-        <div className="vp-grid">{P.life.map(([t, s]) => <article className="vb-card" key={t}><h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid">{P.life.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
 
       <section className="mp-sec" aria-labelledby="vc2-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">Charging &amp; service</p><h2 id="vc2-t" className="display">{P.powered}</h2></div></div>
-        <div className="vp-grid two">{P.charging.map(c => <article className="vb-card big" key={c.t}><b className="vp-big">{c.big}<i>+</i></b><h3>{c.t}</h3><p>{c.s}</p><a className="more-link" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{c.cta} <Icon n="right" size={14} /></a></article>)}</div>
-        <div className="vp-grid two" style={{ marginTop: 16 }}>{P.homeCharge.map(([t, s]) => <article className="vb-card" key={t}><span className="ico"><Icon n="zap" size={20} /></span><h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid two">{P.charging.map(c => <article className="vb-card big" key={c.t}>{P.art[c.t] && <img className="vb-img" src={`./images/${P.art[c.t]}`} alt={c.t} loading="lazy" />}<b className="vp-big">{c.big}<i>+</i></b><h3>{c.t}</h3><p>{c.s}</p><a className="more-link" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{c.cta} <Icon n="right" size={14} /></a></article>)}</div>
+        <div className="vp-grid two" style={{ marginTop: 16 }}>{P.homeCharge.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<span className="ico"><Icon n="zap" size={20} /></span><h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
 
       <section className="mp-sec alt" aria-labelledby="vs-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">My VIDA app</p><h2 id="vs-t" className="display">{P.app.t}</h2><p className="count">{P.app.s}</p></div><div className="head-act"><a className="btn ghost" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{P.app.cta}</a></div></div>
-        <div className="vp-grid">{P.app.stats.map(([t, s]) => <article className="vb-card" key={t}><h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid">{P.app.stats.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
 
       <VxColourPick P={P} V={V} />
@@ -510,7 +526,7 @@ function VxStory({ P }) {
       <VxSavings P={P} />
       <section className="mp-sec" aria-labelledby="va-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">{P.model}</p><h2 id="va-t" className="display">Accessories</h2></div><div className="head-act"><a className="btn ghost" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">View all accessories</a></div></div>
-        <div className="vp-grid">{P.accessories.map(([t, s]) => <article className="vb-card" key={t}><h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid">{P.accessories.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
     </>
   )
@@ -539,7 +555,7 @@ function VidaBuy() {
     <section className="mp-sec alt" id="buy" aria-labelledby="vb-t"><div className="wrap">
       <div className="sec-head"><div><p className="eyebrow">{B.eyebrow}</p><h2 id="vb-t" className="display">{B.title[0]} <span>{B.title[1]}</span></h2></div></div>
       <div className="vb-grid">
-        <article className="vb-card wide"><span className="ico"><Icon n="pin" size={20} /></span><div><h3>{B.dealer.t}</h3><p>{B.dealer.s}</p></div><a className="btn" href="#contact">{B.dealer.cta}</a></article>
+        <article className="vb-card wide">{B.dealer.image && <img className="vb-img side" src={`./images/${B.dealer.image}`} alt={B.dealer.t} loading="lazy" />}<span className="ico"><Icon n="pin" size={20} /></span><div><h3>{B.dealer.t}</h3><p>{B.dealer.s}</p></div><a className="btn" href="#contact">{B.dealer.cta}</a></article>
         <article className="vb-card"><span className="ico"><Icon n="card" size={20} /></span><h3>{B.zero.t}</h3><p>{B.zero.s}</p><a className="more-link" href={waLink('Hi West Coast Motors, tell me about VIDA zero down payment finance.')} target="_blank" rel="noreferrer">{B.zero.cta} <Icon n="right" size={14} /></a></article>
         <article className="vb-card"><span className="ico"><Icon n="box" size={20} /></span><h3>{B.online.t}</h3><p>{B.online.s}</p><small>{B.online.fine}</small><a className="more-link" href={B.url} target="_blank" rel="noreferrer">{B.online.cta} <Icon n="right" size={14} /></a></article>
       </div>
@@ -565,7 +581,7 @@ function VxExtras() {
         <div className="sec-head"><div><p className="eyebrow">Ghar Ghar Evooter</p><h2 id="vx-g" className="display">Made for <span>every road</span></h2></div></div>
         <VxGallery />
       </div></section>
-      <section className="vx-baas" aria-labelledby="vx-b" style={{ backgroundImage: `linear-gradient(90deg,rgba(6,25,46,.92),rgba(6,25,46,.35)),url(./images/vx2-duo.jpg)` }}><div className="wrap">
+      <section className="vx-baas" aria-labelledby="vx-b" style={{ backgroundImage: `linear-gradient(90deg,rgba(6,25,46,.92),rgba(6,25,46,.35)),url(./images/ev-common/vx2-duo.jpg)` }}><div className="wrap">
         <p className="eyebrow">VIDA BaaS · Battery as a Service</p>
         <h2 id="vx-b" className="display">Starting @ just <span>{px(B.from)}</span></h2>
         <p className="vx-big">{B.copy}</p>
@@ -664,7 +680,7 @@ function Footer() {
       <div className="wrap">
         <div><div className="foot-logo"><WcmLogo /></div><p>Authorised Hero MotoCorp dealer.<br />{SITE.address}</p></div>
         <div><h4>Explore</h4><ul><li><a href="#/petrol">Petrol</a></li><li><a href="#/ev">EV</a></li><li><a href="#sales">Sales</a></li><li><a href="#about">About Us</a></li></ul></div>
-        <div><h4>Services</h4><ul><li><a href={testRide()} target="_blank" rel="noreferrer">Test Ride</a></li><li><a href="#services">Service Booking</a></li><li><a href="#insurance">Insurance</a></li><li><a href="#staff">Our Team</a></li></ul></div>
+        <div><h4>Services</h4><ul><li><a href={testRide()} target="_blank" rel="noreferrer">Test Ride</a></li><li><a href="#services">Service Booking</a></li><li><a href="#insurance">Insurance</a></li></ul></div>
         <div><h4>Contact</h4><ul><li><a href={`tel:${SITE.salesTel}`}>Sales: {SITE.salesPhone}</a></li><li><a href={`tel:${SITE.serviceTel}`}>Service: {SITE.servicePhone}</a></li><li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li></ul></div>
       </div>
       <div className="copy">&copy; {new Date().getFullYear()} {SITE.name}. Hero and VIDA are trademarks of Hero MotoCorp Ltd.</div>
@@ -747,5 +763,6 @@ export default function App() {
       </div>
     )}
     {curtain && <Curtain t={curtain} />}
+    <ChatWidget />
   </>)
 }

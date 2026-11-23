@@ -8,7 +8,7 @@ export default {
   seoDescription: 'Hero Xtreme 125R at West Coast Motors, Mangalore: 124.7 cc, 3 ride modes, cruise control, 4.2" multicolour LCD, dual channel ABS and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/xtreme-125r.html',
   warranty: WARRANTY, offers: OFFERS, accessories: [], banner: 'banner.webp', hero: { image: null },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  film: 'xtreme-125r', layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['5.7', 'sec', 'Acceleration 0-60 km/h'], ['124.7', 'cc', 'Engine displacement'], ['11.4', 'BHP', 'Max power @ 8250 rpm'], ['10.5', 'Nm', 'Max torque @ 6500 rpm']],
   featuresTitle: 'Xtreme 125R features',
   features: {

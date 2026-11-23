@@ -184,7 +184,7 @@
 .bp-gal{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px}
 .bp-gal li{aspect-ratio:16/10;overflow:hidden;background:#0d1118}.bp-gal li:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
 .bp-gal a{display:block;height:100%}.bp-gal img{transition:transform .5s}.bp-gal a:hover img{transform:scale(1.05)}
-.bp-vid{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:20px}
+.bp-vid{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:28px}
 .bp-vid video{width:100%;aspect-ratio:16/9;background:#000;display:block;object-fit:cover}.bp-vid b{display:block;margin-top:10px;font:700 18px var(--f-label);letter-spacing:.06em;text-transform:uppercase}.bp-vid p{margin:4px 0 0;color:#b7c3d4;font-size:14px;line-height:1.5}
 .bp-items{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px}
 .bp-items li{display:grid;gap:12px;align-content:start}.bp-items .bp-photo,.bp-items .bp-ph{aspect-ratio:16/10;height:auto;min-height:0}
@@ -195,3 +195,4 @@
 /* hero fallback: when a model has no wide hero photo, show the selected colour photo on the right */
 .bp-hero-bike{position:absolute;right:max(2vw,0px);bottom:6%;width:min(54vw,780px);max-height:78%;object-fit:contain;z-index:0;pointer-events:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55));animation:bpIn .9s .15s cubic-bezier(.2,.8,.2,1) both}
 @media (max-width:820px){.bp-hero-bike{width:92vw;right:4vw;bottom:2%;opacity:.35}}
+

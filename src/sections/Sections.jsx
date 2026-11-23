@@ -1,5 +1,5 @@
 import { waLink } from '../data.js'
-import { SALES, INSURANCE, SERVICES, ABOUT, STAFF } from './content.js'
+import { SALES, INSURANCE, SERVICES, ABOUT } from './content.js'
 import './sections.css'
 
 const Head = ({ eyebrow, title, intro, light }) => (
@@ -9,7 +9,6 @@ const Head = ({ eyebrow, title, intro, light }) => (
     {intro && <p className="hs-intro">{intro}</p>}
   </div>
 )
-const initials = n => (n || '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('')
 
 /* Sales: contains Insurance only */
 export function Sales({ Icon }) {
@@ -43,7 +42,7 @@ export function Services() {
   )
 }
 
-/* About Us, with Staff inside it */
+/* About Us */
 export function About() {
   return (
     <section className="hs hs-about" id="about" aria-labelledby="about-t"><div className="wrap">
@@ -55,17 +54,6 @@ export function About() {
           {ABOUT.facts.length > 0 && <dl className="hs-facts">{ABOUT.facts.map(([v, l]) => <div key={l}><dt>{v}</dt><dd>{l}</dd></div>)}</dl>}
         </div>
         <div className="hs-photo">{ABOUT.photo ? <img src={`./images/${ABOUT.photo}`} alt="West Coast Motors showroom" loading="lazy" /> : <div role="img" aria-label="Showroom photo to be added"><span>Showroom photo</span><small>Add a file to public/images/ and set it in sections/content.js</small></div>}</div>
-      </div>
-
-      <div className="hs-staff" id="staff">
-        <h3 className="display">{STAFF.title}</h3><p className="hs-intro">{STAFF.intro}</p>
-        <ul>{STAFF.people.map((p, i) => (
-          <li key={i}>
-            <div className="av">{p.photo ? <img src={`./images/staff/${p.photo}`} alt={p.name} loading="lazy" /> : <span aria-hidden="true">{initials(p.name) || '+'}</span>}</div>
-            <b>{p.name || 'Name to be added'}</b><span>{p.role}</span>
-            {p.phone && <a href={`tel:${p.phone.replace(/\s/g, '')}`}>{p.phone}</a>}
-          </li>))}
-        </ul>
       </div>
     </div></section>
   )

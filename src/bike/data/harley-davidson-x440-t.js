@@ -8,7 +8,7 @@ export default {
   seoDescription: 'Harley-Davidson X440 T at West Coast Motors, Mangalore: 440 cc air-oil cooled, 27 bhp, 38 Nm, ride by wire with Rain and Road modes, 3.5" TFT, switchable rear ABS and traction control. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/harley-davidson-x440.html',
   warranty: WARRANTY, offers: OFFERS, accessories: [], hero: { image: 'hero.webp' },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  layout: ['hero', 'offers', 'quick', 'features', 'videos', 'colours', 'variants', 'gallery', 'specs', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['27', 'bhp', 'Max power @ 6000 rpm'], ['38', 'Nm', 'Max torque @ 4000 rpm'], ['440', 'cc', 'Air-oil cooled'], ['3.5"', 'TFT', 'Enhanced digital display']],
   featuresTitle: 'New. Beyond the everyday.',
   features: [
@@ -28,7 +28,11 @@ export default {
     { name: 'Pearl White', hex: '#f0f0f0', image: 'colour-pearl-white.webp' }, { name: 'Vivid Black', hex: '#161616', image: 'colour-vivid-black.webp' },
   ],
   colourNote: 'Hero’s page names these four colours for the X440 T. Ask us which is in stock.',
-  gallery: [{ file: 'g-3.webp', label: 'X440 T, all four colours' }, { file: 'g-1.webp', label: 'X440 T after dark' }, { file: 'g-4.webp', label: 'X440 T under the lights' }, { file: 'g-5.webp', label: 'X440 T on the road' }, { file: 'g-2.webp', label: 'X440 T tail section' }],
+  stage: 'super', heroVideo: { file: 'teaser.mp4', poster: 'teaser-poster.jpg' },
+  videos: [
+    { title: 'Harley-Davidson film', text: 'The Harley-Davidson story, as shown by Hero.', file: 'film.mp4', poster: 'film-poster.jpg' },
+  ],
+  gallery: [{ file: 'g-rider.webp', label: 'X440 T on the road' }, { file: 'g-3.webp', label: 'X440 T, all four colours' }, { file: 'g-1.webp', label: 'X440 T after dark' }, { file: 'g-4.webp', label: 'X440 T under the lights' }, { file: 'g-5.webp', label: 'X440 T on the road' }, { file: 'g-2.webp', label: 'X440 T tail section' }],
   specs: HD_SPECS,
   specNote: 'Hero shows a single specification table for the X440 range. Specifications are as shown on Hero’s page.',
   faq: faq('Harley-Davidson X440 T', [

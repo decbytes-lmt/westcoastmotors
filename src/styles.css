@@ -626,3 +626,10 @@ body{overflow-x:clip}
 .vpills button{font:inherit;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:background .2s,border-color .2s}
 .vpills button:hover{border-color:var(--green-2)}
 .vpills button.on{background:var(--green-2);border-color:var(--green-2);color:#fff}
+
+/* EV images */
+.vb-img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:12px;display:block;margin-bottom:6px}
+.vb-img.side{width:220px;flex:none;margin:0}
+.vp-banner{display:block;width:100%;border-radius:16px;margin:0 0 24px}
+.vcp-stage img[src$=".png"]{object-fit:contain}
+@media (max-width:760px){.vb-img.side{width:100%}}

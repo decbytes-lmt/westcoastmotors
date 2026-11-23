@@ -19,6 +19,11 @@ import hd from './harley-davidson-x440.js'
 import hdt from './harley-davidson-x440-t.js'
 import destini110 from './destini-110.js'
 import destini125 from './new-destini-125.js'
+import destiniPrime from './destini-prime.js'
+import pleasureXtec from './pleasure-xtec.js'
+import xoom110 from './xoom-110.js'
+import xoom125 from './xoom-125.js'
+import xoom160 from './xoom-160.js'
 // One entry per URL slug: { d: data, start: model tab to open }. Add each new bike here.
 // A family page (Splendor+) is one data object served at several slugs, each opening its own tab.
 export const BIKES = {
@@ -41,6 +46,11 @@ export const BIKES = {
   [hdt.slug]: { d: hdt },
   [destini110.slug]: { d: destini110 },
   [destini125.slug]: { d: destini125 },
+  [destiniPrime.slug]: { d: destiniPrime },
+  [pleasureXtec.slug]: { d: pleasureXtec },
+  [xoom110.slug]: { d: xoom110 },
+  [xoom125.slug]: { d: xoom125 },
+  [xoom160.slug]: { d: xoom160 },
   ...Object.fromEntries(flex.models.map(m => [m.id, { d: flex, start: m.id }])),
   ...Object.fromEntries(splendor.models.map(m => [m.id, { d: splendor, start: m.id }])),
 }

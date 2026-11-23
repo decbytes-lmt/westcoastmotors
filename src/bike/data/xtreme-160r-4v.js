@@ -1,5 +1,6 @@
 // XTREME 160R 4V: every value below was copied from heromotocorp.com/en-in/motorcycles/xtreme-160r-4v.html.
 // Anything Hero did not publish is left null/empty on purpose (price, mileage, accessories, variant price).
+// FEATURE PHOTOS (looks-matched, please confirm): bike front = Cybersharp design, golden forks, ride-mode menu = Ride By Wire, TFT, engine. Videos are the mp4 files you sent.
 // PHOTOS: six colour photos matched to names by looks (Pro Black vs Carbon Black especially): please confirm. Standard has only a 'coming soon' image on Hero, so no photo.
 // EDIT FREELY. Photos: drop files in public/images/xtreme-160r-4v/ and put the file name in the `image` fields.
 export default {
@@ -12,7 +13,7 @@ export default {
   brochure: 'https://www.heromotocorp.com/content/dam/hero-commerce/in/en/products/performance/content-fragments/xtreme-160r-4v/assets/xtreme-160r-4v-brochure-new.pdf',
   warranty: '5 years or 70,000 km (whichever comes first), as stated by Hero MotoCorp',
 
-  layout: ['hero', 'quick', 'overview', 'features', 'colours', 'variants', 'compare', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  film: 'xtreme-160r-4v', stage: 'super', heroVideo: { mobile: 'banner-film.mp4' }, layout: ['hero', 'quick', 'overview', 'features', 'videos', 'colours', 'variants', 'compare', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
   featuresTitle: 'Discover what makes it the Adrenaline Machine',
   variantNote: 'Hero MotoCorp does not publish separate prices or a feature-by-feature comparison for Carbon, Pro and Standard, so none are shown here. Ask us for the current difference.',
   compare: { title: 'How it improves on the Xtreme 160R', heads: ['', 'Xtreme 160R', 'Xtreme 160R 4V'], rows: [['0–60 km/h', '4.5 s', '4.4 s'], ['Engine', '2V, air-cooled', '4V, oil-cooled'], ['Display', 'LCD', 'TFT'], ['Ride By Wire', 'No', 'Yes'], ['Cruise control', 'No', 'Yes']] },
@@ -56,19 +57,29 @@ export default {
     { id: 'standard', name: 'Standard', image: 'standard-coming-soon.webp', price: null, blurb: 'Colours not yet published by Hero.', colours: [] },
   ],
 
+  videos: [
+    { title: 'Class D LED headlamp', text: 'Automatic headlamp on.', file: 'led-headlamp.mp4', poster: 'led-headlamp-poster.jpg' },
+    { title: '3 ride modes', text: 'Rain, Road and Sports.', file: 'modes.mp4', poster: 'modes-poster.jpg' },
+    { title: 'TFT display', text: '10.67 cm multicolour TFT.', file: 'tft.mp4', poster: 'tft-poster.jpg' },
+    { title: 'Drag race timer', text: '0–60 km/h and quarter mile.', file: 'drag-timer.mp4', poster: 'drag-timer-poster.jpg' },
+    { title: 'Cruise control', text: 'Hold a set speed.', file: 'cruise.mp4', poster: 'cruise-poster.jpg' },
+    { title: 'Dual channel ABS', text: 'Anti-lock braking on both wheels.', file: 'abs.mp4', poster: 'abs-poster.jpg' },
+    { title: 'Adjustable clutch and brake levers', text: 'Set the levers to your reach.', file: 'levers.mp4', poster: 'levers-poster.jpg' },
+  ],
+
   // Key features, grouped. Only features Hero lists for this model.
   features: {
     'Design and styling': [
-      { title: 'New Cybersharp design', text: 'Sharp, aggressive styling that gives the Xtreme 160R 4V its stance.', image: null },
+      { title: 'New Cybersharp design', text: 'Sharp, aggressive styling that gives the Xtreme 160R 4V its stance.', image: 'feat-design.webp' },
       { title: 'Class D LED headlamp', text: 'LED headlamp that switches on automatically.', image: null },
     ],
     'Performance': [
-      { title: '4-valve oil-cooled engine', text: '163.2 cc, 4-stroke single cylinder engine making 17.1 ps and 14.6 Nm.', image: null },
-      { title: 'Ride By Wire, 3 ride modes', text: 'Rain, Road and Sports modes adapt the bike to the road you are on.', image: null },
-      { title: 'Upside Down golden forks', text: 'USD front suspension for confident cornering.', image: null },
+      { title: '4-valve oil-cooled engine', text: '163.2 cc, 4-stroke single cylinder engine making 17.1 ps and 14.6 Nm.', image: 'feat-engine.webp' },
+      { title: 'Ride By Wire, 3 ride modes', text: 'Rain, Road and Sports modes adapt the bike to the road you are on.', image: 'feat-modes.webp' },
+      { title: 'Upside Down golden forks', text: 'USD front suspension for confident cornering.', image: 'feat-forks.webp' },
     ],
     'Technology': [
-      { title: '10.67 cm TFT display', text: 'Multicolour display with 60+ features and connectivity.', image: null },
+      { title: '10.67 cm TFT display', text: 'Multicolour display with 60+ features and connectivity.', image: 'feat-tft.webp' },
       { title: 'Drag race timer', text: 'Two drag modes (0–60 km/h and quarter mile), plus top speed and lap timers.', image: null },
     ],
     'Safety': [

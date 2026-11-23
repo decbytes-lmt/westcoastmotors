@@ -1,5 +1,6 @@
 // XPULSE 210: copied from heromotocorp.com (Xpulse 210 page). PRICES: `price: null`; Hero's Delhi prices are never used.
 // PHOTOS: Hero's saved page names one colour (Glacier White); the photo was matched by looks (please confirm). The blue and silver photos are in the gallery, unnamed.
+// FEATURE PHOTOS (user-supplied loose photos, matched to features by looks, please confirm): engine/clutch/trail/frame/water/headlamp/cluster/ABS.
 // NOTE: Hero lists variants as BASE and TOP but calls the top variant "Pro" in its specification and cluster rows; shown as "Top" here with that remark.
 import { WARRANTY, OFFERS, faq } from './_std.js'
 
@@ -12,14 +13,14 @@ export default {
   quick: [['210', 'cc', 'Liquid-cooled engine'], ['24.6', 'PS', 'Max power @ 9250 rpm'], ['20.7', 'Nm', 'Max torque @ 7250 rpm'], ['210', 'mm', 'Front suspension travel']],
   featuresTitle: 'Built to explore the unknown',
   features: [
-    { title: '4V DOHC Liquid Cooled Engine', text: 'Dominate any terrain with the powerful 210 cc DOHC liquid-cooled engine. Max power 24.6 PS @ 9250 rpm and max torque 20.7 Nm @ 7250 rpm.', image: null },
-    { title: '6-Speed Transmission with Assist and Slipper Clutch', text: 'Lighter clutch operation during upshifts.', image: null },
-    { title: 'Long-Travel Suspension', text: 'High impact absorption with 210 mm front and 205 mm rear suspension travel, for superior control with responsive braking.', image: null },
-    { title: 'New High Tensile Semi-Double Cradle Frame', text: 'Frame archetype offering optimum stiffness for on and off-road riding conditions, with linkage rear suspension.', image: null },
-    { title: 'Upswept Exhaust', text: 'Take on water crossings and tough trails confidently; enhances clearance and delivers a sporty growl.', image: null },
-    { title: 'Class-D LED Projector Headlamp with DRL', text: 'With white light illumination for better road visibility.', image: null },
-    { title: 'Instrument Cluster with Bluetooth', text: '4.2" display with Bluetooth call and SMS alerts and turn-by-turn navigation; clear readability even in bright light.', image: null },
-    { title: '3 ABS Modes', text: 'Single channel with 3 ABS modes (Base); dual channel with 3 ABS modes (Top).', image: null },
+    { title: '4V DOHC Liquid Cooled Engine', text: 'Dominate any terrain with the powerful 210 cc DOHC liquid-cooled engine. Max power 24.6 PS @ 9250 rpm and max torque 20.7 Nm @ 7250 rpm.', image: 'feat-engine.webp' },
+    { title: '6-Speed Transmission with Assist and Slipper Clutch', text: 'Lighter clutch operation during upshifts.', image: 'feat-clutch.webp' },
+    { title: 'Long-Travel Suspension', text: 'High impact absorption with 210 mm front and 205 mm rear suspension travel, for superior control with responsive braking.', image: 'feat-trail.webp' },
+    { title: 'New High Tensile Semi-Double Cradle Frame', text: 'Frame archetype offering optimum stiffness for on and off-road riding conditions, with linkage rear suspension.', image: 'feat-frame.webp' },
+    { title: 'Upswept Exhaust', text: 'Take on water crossings and tough trails confidently; enhances clearance and delivers a sporty growl.', image: 'feat-water.webp' },
+    { title: 'Class-D LED Projector Headlamp with DRL', text: 'With white light illumination for better road visibility.', image: 'feat-headlamp.webp' },
+    { title: 'Instrument Cluster with Bluetooth', text: '4.2" display with Bluetooth call and SMS alerts and turn-by-turn navigation; clear readability even in bright light.', image: 'feat-cluster.webp' },
+    { title: '3 ABS Modes', text: 'Single channel with 3 ABS modes (Base); dual channel with 3 ABS modes (Top).', image: 'feat-abs.webp' },
   ],
   variants: [{ id: 'base', name: 'Xpulse 210 Base', price: null }, { id: 'top', name: 'Xpulse 210 Top', price: null }],
   colours: [{ name: 'Glacier White', hex: '#e9ebee', image: 'colour-glacier-white.webp' }],

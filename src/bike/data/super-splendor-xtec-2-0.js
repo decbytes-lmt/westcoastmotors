@@ -7,7 +7,7 @@ export default {
   seoDescription: 'Hero Super Splendor XTEC 2.0 at West Coast Motors, Mangalore: 124.7 cc, silent start (ISG), USB Type-C charging, Bluetooth with call and SMS alerts and a 5-year warranty. Book a test ride.',
   source: 'https://www.heromotocorp.com/en-in/motorcycles/super-splendor-xtec-2-0.html',
   warranty: WARRANTY, offers: OFFERS, finance: FINANCE, accessories: [], banner: 'banner.webp', hero: { image: null },
-  layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'sec:ownership', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
+  film: 'super-splendor-xtec', layout: ['hero', 'offers', 'quick', 'features', 'colours', 'variants', 'sec:ownership', 'specs', 'finance', 'steps', 'accessories', 'testride', 'faq', 'related'],
   quick: [['75', 'kmpl', 'Mileage, as stated by Hero*'], ['124.7', 'cc', 'Displacement'], ['10.7', 'BHP', 'Max power @ 7500 rpm'], ['10.6', 'Nm', 'Max torque @ 6000 rpm']],
   featuresTitle: 'Discover what makes Super Splendor Xtec 2.0 smarter',
   features: [
