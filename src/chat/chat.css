@@ -72,3 +72,4 @@ html.wc-lock,html.wc-lock body{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.wc-launch *,.wc-panel,.wc-panel *{animation:none!important;transition-duration:.01s!important}}
 .wc-head>div{min-width:0}.wc-head p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:420px){.wc-on{font-size:0;gap:0}.wc-on i{margin-right:0}.wc-head{gap:8px}}
+.wc-vote{display:flex;gap:4px;margin-top:-3px;opacity:.55;transition:opacity .2s}.wc-vote:hover,.wc-vote:focus-within{opacity:1}.wc-vote button{width:32px;height:28px;border-radius:8px;border:1px solid var(--ln);background:transparent;cursor:pointer;font-size:13px;line-height:1}.wc-vote button:hover{background:rgba(255,255,255,.08)}.wc-vt{color:var(--mu);font-size:11.5px;margin-top:-3px}

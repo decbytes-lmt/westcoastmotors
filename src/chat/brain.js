@@ -2,10 +2,13 @@
 import { BIKES } from '../bike/data/index.js'
 import { CARD } from '../bike/cardImages.js'
 import { waLink } from '../data.js'
-import { STORE, FAQ, RECS, PRICE_NOTE } from './knowledge.js'
+import { STORE, FAQ, RECS, PRICE_NOTE, HOURS } from './knowledge.js'
+import { clock, clockFacts, statusLine, hoursText } from './time.js'
 
 const norm = s => (s || '').toLowerCase().replace(/[’'`]/g, '').replace(/[^a-z0-9+.]+/g, ' ').replace(/\s+/g, ' ').trim()
 const has = (q, re) => re.test(q)
+const HOURS_HINT = () => HOURS.open && HOURS.close
+const CLOSED_DAYS = () => HOURS.closedWeekdays || []
 const money = v => (typeof v === 'string' && /\d/.test(v)) ? v : null
 
 // ---------- bike index (built once from the bike data) ----------
@@ -97,6 +100,21 @@ function recommend(q) {
   return reply(`${r.why} Here are my picks:` + (budget ? '\nI cannot quote prices here yet, so please ask our sales team for the exact price of each.' : ''), { cards: cards(list), chips: ['Compare two models', 'Ask for prices', 'Book a test ride'] })
 }
 
+
+// ---------- hard boundaries (code, not AI: cannot be talked around) ----------
+const OTHER_BRANDS = /\b(honda|bajaj|tvs|royal enfield|enfield|yamaha|suzuki|ktm|ather|ola|jawa|revolt|vespa|triumph|kawasaki|ducati|bmw|hyundai|maruti|tata|mahindra)\b/
+const INJECTION = /ignore (all |the |your |previous )*(instructions|rules)|system prompt|your (instructions|rules|prompt)|act as|pretend (to be|you)|jailbreak|developer mode|reveal .*(prompt|key|password)|api ?key/
+const ABUSE = /\b(fuck|shit|bastard|bitch|asshole|idiot|stupid|madarchod|bhenchod|chutiya|saala)\b/
+const OFFTOPIC = /\b(politic|election|modi|cricket score|ipl|movie|weather|stock market|bitcoin|crypto|loan app|recipe|homework|poem|joke|write (me )?(a|an) (essay|code|program))\b/
+export function guard(text) {
+  const q = norm(text)
+  if (INJECTION.test(q)) return reply('I can only help with West Coast Motors and Hero bikes: models, features, colours, comparisons, test rides and showroom details.', { chips: ['Show me your bikes', 'Book a test ride'], blocked: true })
+  if (ABUSE.test(q)) return reply('Let us keep it friendly. I am happy to help with Hero bikes, scooters and test rides.', { blocked: true })
+  if (OTHER_BRANDS.test(q) && !/hero|splendor|xtreme|glamour|passion|destini|xoom|pleasure|karizma|xpulse|hf /.test(q)) return reply('I only help with Hero MotoCorp bikes and scooters at West Coast Motors. Tell me what you need in a Hero and I will suggest one.', { chips: ['Best bike for daily use', 'Sporty and powerful'], blocked: true })
+  if (OFFTOPIC.test(q)) return reply('That is outside what I can help with. I can answer questions about Hero bikes, scooters, test rides and our showroom.', { chips: ['Show me your bikes', 'Contact the showroom'], blocked: true })
+  return null
+}
+
 // ---------- the main entry ----------
 // ctx = { bike: slug the customer is looking at (page or last chat) }
 export function ask(text, ctx = {}) {
@@ -107,18 +125,35 @@ export function ask(text, ctx = {}) {
   const done = (r, b) => ({ ...r, ctx: remember(b || exact[0] || null) })
 
   if (!q) return done(reply('Type your question and I will help.'))
-  if (has(q, /^(hi|hii+|hello|hey|namaste|namaskara|good (morning|afternoon|evening)|yo)\b/) && q.split(' ').length <= 4) return done(reply('Hello! Welcome to West Coast Motors. Ask me about any Hero bike or scooter, compare models, or book a test ride.', { chips: ['Show me your bikes', 'Best bike for daily use', 'Book a test ride'] }))
+  const blocked = guard(text); if (blocked) return done(blocked)
+  if (has(q, /^(hi|hii+|hello|hey|namaste|namaskara|good (morning|afternoon|evening)|yo)\b/) && q.split(' ').length <= 4) return done(reply(`${(() => { const h = clock().n.h; return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening' })()}! Welcome to West Coast Motors. Ask me about any Hero bike or scooter, compare models, or book a test ride.`, { chips: ['Show me your bikes', 'Best bike for daily use', 'Book a test ride'] }))
   if (has(q, /^(thanks|thank you|thx|ok thanks|great|nice|cool|ok|okay)\b/) && q.split(' ').length <= 4) return done(reply('You are welcome! Anything else I can help with?', { chips: ['Book a test ride', 'Contact the showroom'] }))
   if (has(q, /\b(bye|goodbye)\b/)) return done(reply('Thank you for visiting West Coast Motors. Ride safe!'))
   if (has(q, /human|agent|person|executive|talk to (someone|sales)|call me|callback/)) return done(reply('Sure, our team will be happy to talk to you.', { actions: callActions }))
+
+
+  // ---- date / day / time / open-closed / calls not answered (works offline, from the clock + HOURS in knowledge.js) ----
+  const c = clock()
+  const dayWord = (q.match(/\b(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/) || [])[1]
+  const noAnswer = has(q, /(not|no|never|nobody|didnt|dont|cant|cannot|unable|why).*(pick|answer|receiv|respond|reply|attend|reach|connect|available)|(call|phone|number).*(busy|switch|unreachable|no response|not working|not reachable|not picking)|no one (is )?(answering|picking)|not responding|no response/)
+  if (!exact.length && noAnswer) return done(reply(statusLine(c) + (c.state === 'weekly' || c.state === 'holiday' || c.state === 'after-hours' || c.state === 'before-hours' ? '\nThat is why calls are not being answered right now. Please call again' + (c.next ? ' ' + (c.next.word === 'tomorrow' ? 'tomorrow' : 'on ' + c.next.name) : ' on the next working day') + ', or send a WhatsApp message so your request is waiting for the team.' : '\nThe team may be busy with customers or on another call. Please try again in a few minutes, or send a WhatsApp message.') + `\nSales: ${STORE.salesPhone} | Service: ${STORE.servicePhone}`, { actions: callActions, chips: ['Showroom address', 'Book a test ride'] }))
+  if (!exact.length && has(q, /(what|which|todays|today s|current|tell).*(day|date)|\b(day|date) (is it|today)|what time|time now|current time|\bwhat is today\b|\btoday date\b/)) {
+    const asksTime = /time/.test(q) && !/day|date/.test(q)
+    return done(reply(asksTime ? `It is **${c.time}** (Indian time) on ${c.today.label}.` : `Today is **${c.today.label}**.` + (/tomorrow/.test(q) ? `\nTomorrow is ${c.tomorrow.label}.` : ''), { chips: ['Are you open today?', 'Showroom address'] }))
+  }
+  if (!exact.length && has(q, /tomorrow/) && has(q, /day|date|open|close|working|holiday|available|visit|come/)) return done(reply(`Tomorrow is **${c.tomorrow.label}**. ` + (c.tomorrowStatus.open ? 'It is a working day.' + (HOURS_HINT() ? '' : ' Please call to confirm timings.') : (c.tomorrowStatus.why === 'holiday' ? `We are closed (${c.tomorrowStatus.holiday.name}).` : 'We are closed (weekly holiday).')), { actions: callActions }))
+  if (!exact.length && (has(q, /\b(open|close|closed|opening|closing|working|holiday|timing|timings|hours|schedule)\b/) || dayWord)) {
+    if (dayWord) { const di = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].indexOf(dayWord); const isHol = (CLOSED_DAYS().includes(di)); return done(reply(isHol ? `Yes, **${dayWord[0].toUpperCase() + dayWord.slice(1)}** is our weekly holiday. The showroom and service centre are closed.` : `**${dayWord[0].toUpperCase() + dayWord.slice(1)}** is a working day. ${hoursText()}`, { actions: callActions })) }
+    return done(reply(statusLine(c) + '\n' + hoursText(), { actions: [{ label: 'Open map', href: STORE.mapsUrl }, callActions[0]], chips: ['Showroom address', 'Book a test ride'] }))
+  }
 
   // test ride
   if (has(q, /test ?ride|test drive|try the|ride it/)) return done(reply(focus ? `Great choice! Fill in the details and we will arrange a test ride of the **${focus.name}**.` : 'Happy to arrange a test ride. Pick the bike and share your details.', { form: { bike: focus ? focus.name : '' } }), focus)
 
   // contact / location / hours / service
   if (has(q, /service|servicing|repair|spare|puncture|breakdown/) && !focus) return done(reply(FAQ.find(f => f.k.includes('service')).a + `\nService: **${STORE.servicePhone}**`, { actions: [{ label: 'Call service', href: 'tel:' + STORE.serviceTel }, { label: 'Open map', href: STORE.mapsUrl }] }))
-  if (has(q, /address|location|where|directions|map|reach|visit|showroom|near/) ) return done(reply(`**${STORE.name}**\n${STORE.address}\nSales: ${STORE.salesPhone}\nService: ${STORE.servicePhone}\nEmail: ${STORE.email}\n` + (STORE.hours ? 'Timings: ' + STORE.hours : 'Please call before you visit to confirm timings.'), { actions: [{ label: 'Open map', href: STORE.mapsUrl }, callActions[0]] }))
-  if (has(q, /phone|number|contact|call|whatsapp|email|mail|timing|open|close|hours|time/) && !focus) return done(reply(`Sales: **${STORE.salesPhone}**\nService: **${STORE.servicePhone}**\nEmail: ${STORE.email}\n` + (STORE.hours ? 'Timings: ' + STORE.hours : 'Please call to confirm showroom timings.'), { actions: callActions }))
+  if (has(q, /address|location|where|directions|map|reach|visit|showroom|near/) ) return done(reply(`**${STORE.name}**\n${STORE.address}\nSales: ${STORE.salesPhone}\nService: ${STORE.servicePhone}\nEmail: ${STORE.email}\n` + hoursText(), { actions: [{ label: 'Open map', href: STORE.mapsUrl }, callActions[0]] }))
+  if (has(q, /phone|number|contact|call|whatsapp|email|mail|timing|open|close|hours|time/) && !focus) return done(reply(`Sales: **${STORE.salesPhone}**\nService: **${STORE.servicePhone}**\nEmail: ${STORE.email}\n` + hoursText(), { actions: callActions }))
 
   // EV
   if (has(q, /\bev\b|electric|vida/)) return done(reply('Our electric range (VIDA) is on the EV page. Ask the sales team about availability and test rides.', { actions: [{ label: 'Open EV page', href: '#/ev' }, callActions[0]] }))
@@ -139,7 +174,7 @@ export function ask(text, ctx = {}) {
     for (const [, re, label, get] of TOPICS) if (has(q, re)) {
       const v = get(b)
       if (v) return done(reply(`**${b.name}**, ${label.toLowerCase()}: ${v}` + (label === 'Mileage' ? '\nReal-world mileage varies with riding style and road conditions.' : ''), { chips: CHIPS_BIKE(b).filter(c => !c.toLowerCase().startsWith(label.toLowerCase())).slice(0, 4) }), b)
-      if (!has(q, FEATURE_WORDS)) return done(reply(`I do not have the ${label.toLowerCase()} of the **${b.name}** listed. Please check its page or ask our team.`, { actions: [{ label: 'Open page', href: '#/petrol/' + b.slug }, callActions[0]] }), b)
+      if (!has(q, FEATURE_WORDS)) return done(reply(`I do not have the ${label.toLowerCase()} of the **${b.name}** listed. Please check its page or ask our team.`, { unknown: true, actions: [{ label: 'Open page', href: '#/petrol/' + b.slug }, callActions[0]] }), b)
     }
     if (has(q, /colou?r|shade|paint/)) return done(b.cols.length ? reply(`**${b.name}** colours: ${b.cols.join(', ')}.\nAsk us which are in stock right now.`, { actions: [{ label: 'See colours', href: '#/petrol/' + b.slug }], chips: CHIPS_BIKE(b).slice(0, 3) }) : reply(`Colour details for the **${b.name}** are on its page. Ask us which colours are in stock.`, { actions: [{ label: 'Open page', href: '#/petrol/' + b.slug }] }), b)
     if (has(q, /variant|version|model|type/)) { const v = (b.d.variants || []).map(x => x.name).filter(Boolean); if (v.length) return done(reply(`**${b.name}** variants: ${v.join(', ')}.`, { chips: ['Ask for prices', `Book test ride for ${b.name}`] }), b) }
@@ -150,7 +185,7 @@ export function ask(text, ctx = {}) {
         const hl = (b.d.highlights || []).filter(h => Array.isArray(h)).map(h => ({ title: h[0], text: h[1] || '' })), ov = b.d.overview ? [{ title: b.d.overview.title || '', text: b.d.overview.intro || '' }] : []
         const hit = [...b.feats, ...hl, ...ov].filter(f => (f.title + ' ' + f.text).toLowerCase().includes(kw))
         if (hit.length) return done(reply(`${/\b(does|do|has|have|is there|with|got)\b/.test(q) ? 'Yes. ' : ''}**${b.name}**: ` + hit.slice(0, 3).map(f => f.title + (f.text ? ' (' + f.text.replace(/\.$/, '') + ')' : '')).join('; ') + '.', { chips: ['Show all features', ...CHIPS_BIKE(b).slice(0, 2)] }), b)
-        return done(reply(`I do not see that listed for the **${b.name}**. Please check the specifications on its page or ask our team.`, { actions: [{ label: 'Open page', href: '#/petrol/' + b.slug }, callActions[0]] }), b)
+        return done(reply(`I do not see that listed for the **${b.name}**. Please check the specifications on its page or ask our team.`, { unknown: true, actions: [{ label: 'Open page', href: '#/petrol/' + b.slug }, callActions[0]] }), b)
       }
       const f = b.feats.slice(0, 7).map(x => '• ' + x.title).join('\n')
       return done(reply(`**${b.name}** highlights:\n${f}`, { actions: [{ label: 'All features', href: '#/petrol/' + b.slug }], chips: CHIPS_BIKE(b).filter(c => !c.startsWith('Features')) }), b)
@@ -181,7 +216,7 @@ export function ask(text, ctx = {}) {
   if (has(q, /warranty|guarantee/)) return done(reply('Hero bikes come with a 5-year warranty (5 years or 70,000 km, whichever comes first, as stated by Hero MotoCorp). Scooters carry 5 years or 50,000 km. Ask us about the model you like.', { chips: ['Show me your bikes'] }))
   if (has(q, /feature|spec|tell me/)) return done(reply('Tell me the bike name and I will share its features and specifications.', { chips: ['Xtreme 125R', 'Splendor+', 'Glamour X', 'Xoom 110'] }))
 
-  return done(reply('I am not sure about that one. I would not like to guess, so please ask our team directly. You can also ask me about bikes, features, colours, comparisons or a test ride.', { actions: callActions, chips: ['Show me your bikes', 'Book a test ride', 'Contact the showroom'] }))
+  return done(reply('I am not sure about that one. I would not like to guess, so please ask our team directly. You can also ask me about bikes, features, colours, comparisons or a test ride.', { unknown: true, actions: callActions, chips: ['Show me your bikes', 'Book a test ride', 'Contact the showroom'] }))
 }
 
 // ---------- fact sheet for a real AI model (used by provider.js when an API is connected) ----------
@@ -191,5 +226,5 @@ export function factsFor(text, ctx = {}) {
   if (!list.length && ctx.bike && bySlug[ctx.bike]) list = [bySlug[ctx.bike]]
   const bikes = list.slice(0, 3).map(b => ({ name: b.name, category: b.cat, warranty: b.d.warranty, mileage: b.d.fuelClaim || null, variants: (b.d.variants || []).map(v => v.name), colours: b.cols, features: b.feats.slice(0, 14).map(f => f.title + (f.text ? ': ' + f.text : '')), specs: Object.fromEntries(b.specs.slice(0, 40)), pagePath: '#/petrol/' + b.slug }))
   const q = norm(text), faq = FAQ.filter(f => f.k.some(k => q.includes(norm(k)))).map(f => f.a)
-  return { store: { ...STORE }, priceNote: PRICE_NOTE, bikes, faq, allModels: BIKE_LIST.map(b => b.name) }
+  return { now: clockFacts(), store: { ...STORE }, priceNote: PRICE_NOTE, bikes, faq, allModels: BIKE_LIST.map(b => b.name) }
 }

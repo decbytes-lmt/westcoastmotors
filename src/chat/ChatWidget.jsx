@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { getReply } from './provider.js'
+import { logEvent } from './learn.js'
 import { TILES, STORE } from './knowledge.js'
 import { BIKE_LIST } from './brain.js'
 import { waLink } from '../data.js'
@@ -50,7 +51,7 @@ function TestRideForm({ bike, onDone }) {
   )
 }
 
-function Msg({ m, onChip, onTile, onForm, onNav, last }) {
+function Msg({ m, onChip, onTile, onForm, onNav, onVote, last }) {
   const mine = m.role === 'user'
   return (
     <div className={'wc-msg ' + (mine ? 'me' : 'bot')}>
@@ -75,6 +76,7 @@ function Msg({ m, onChip, onTile, onForm, onNav, last }) {
         {m.tiles && <div className="wc-tiles">{TILES.map((t, i) => <button key={t.id} style={{ '--i': i }} onClick={() => onTile(t)}><span className="wc-ti"><Ic n={t.icon} /></span><span><b>{t.t}</b><small>{t.s}</small></span><Ic n="arrow" s={15} /></button>)}</div>}
         {m.form && !m.sent && <TestRideForm bike={m.form.bike} onDone={d => onForm(m, d)} />}
         {m.sent && <p className="wc-ok">Request ready. Send the WhatsApp message to confirm your test ride.</p>}
+        {!mine && m.q && !m.blocked && !m.form && (m.voted ? <small className="wc-vt">Thanks for the feedback</small> : <div className="wc-vote"><button onClick={() => onVote(m, 1)} aria-label="Good answer">👍</button><button onClick={() => onVote(m, -1)} aria-label="Bad answer">👎</button></div>)}
         {last && m.chips && <div className="wc-chips">{m.chips.map(c => <button key={c} onClick={() => onChip(c)}>{c}</button>)}</div>}
       </div>
     </div>
@@ -102,7 +104,8 @@ export default function ChatWidget() {
     const [r] = await Promise.all([getReply(text, hist, ctx), new Promise(res => setTimeout(res, 550 + Math.min(text.length * 12, 500)))])
     if (id !== seq.current) return
     if (r.ctx) setCtx(r.ctx)
-    setTyping(false); setMsgs(m => [...m, { role: 'bot', ...r, id: 'b' + Date.now() }])
+    if (r.unknown) logEvent('unanswered', text)
+    setTyping(false); setMsgs(m => [...m, { role: 'bot', ...r, q: text, id: 'b' + Date.now() }])
   }, [msgs, typing, ctx])
 
   const reset = () => { seq.current++; setTyping(false); setMsgs([GREETING]); setCtx({ bike: bikeFromHash() }) }
@@ -110,6 +113,7 @@ export default function ChatWidget() {
     const text = `Hi West Coast Motors, I want to book a test ride.\nBike: ${d.bike}\nName: ${d.name}\nMobile: ${d.phone}\n(from website chat)`
     setMsgs(x => x.map(y => y.id === m.id ? { ...y, sent: true } : y)); window.open(waLink(text), '_blank', 'noopener')
   }
+  const onVote = (m, v) => { setMsgs(x => x.map(y => y.id === m.id ? { ...y, voted: v } : y)); logEvent(v > 0 ? 'good' : 'bad', m.q, m.text) }
   const onNav = () => { if (matchMedia('(max-width:640px)').matches) setOpen(false) }
   const here = ctx.bike && BIKE_LIST.find(b => b.slug === ctx.bike)
 
@@ -128,7 +132,7 @@ export default function ChatWidget() {
         <button onClick={() => setOpen(false)} aria-label="Close chat" className="wc-hb"><Ic n="x" s={18} /></button>
       </header>
       <div className="wc-body" ref={box} aria-live="polite">
-        {msgs.map((m, i) => <Msg key={m.id || i} m={m} last={i === msgs.length - 1 && !typing} onChip={send} onTile={t => send(t.q)} onForm={onForm} onNav={onNav} />)}
+        {msgs.map((m, i) => <Msg key={m.id || i} m={m} last={i === msgs.length - 1 && !typing} onChip={send} onTile={t => send(t.q)} onForm={onForm} onNav={onNav} onVote={onVote} />)}
         {typing && <div className="wc-msg bot"><span className="wc-av" aria-hidden="true"><Ic n="spark" s={16} /></span><div className="wc-bub wc-typing" aria-label="WCM AI is typing"><i /><i /><i /></div></div>}
       </div>
       {here && <div className="wc-here">Asking about <b>{here.name}</b> <button onClick={() => send(`Tell me about ${here.name}`)}>Tell me more</button></div>}
