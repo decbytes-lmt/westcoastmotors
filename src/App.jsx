@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import ChatWidget from './chat/ChatWidget.jsx'
-import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, VX2_PLUS, VX2_GO, VIDA_COMPARE, VIDA_BUY, SHOW_EV_PRICES, waLink } from './data.js'
+import { SITE, PETROL, EV, PETROL_CATS, EV_CATS, SLIDES, RIDE, PAGE, VX2_INFO, VX2_PLUS, VX2_GO, VIDA_COMPARE, SHOW_EV_PRICES, waLink } from './data.js'
 
 const KEY = 'wcm-intro-seen'
 const P = {
@@ -297,7 +297,7 @@ function ModelCard({ m, i }) {
 
 /* ---------- One page per vehicle (like Hero's own model pages) ---------- */
 const DOTS = [['lime', '#b6e03a'], ['teal', '#0f9d9a'], ['cyan', '#22d3ee'], ['purple', '#5b21b6'], ['gold', '#d4a017'], ['nexus', '#1d4ed8'], ['blue', '#2563eb'], ['red', '#dc2626'], ['orange', '#f97316'], ['yellow', '#facc15'], ['green', '#16a34a'], ['maroon', '#7f1d1d'], ['silver', '#c0c4cc'], ['gun metal', '#4b5563'], ['grey', '#6b7280'], ['gray', '#6b7280'], ['white', '#f3f4f6'], ['black', '#111827']]
-const dot = n => { const l = n.toLowerCase(); const hit = [...new Set(DOTS.filter(([k]) => l.includes(k)).map(([, c]) => c))].slice(0, 2); return hit.length === 2 ? `linear-gradient(135deg,${hit[0]} 50%,${hit[1]} 50%)` : (hit[0] || '#9ca3af') }
+const dot = (n, solid) => { const l = n.toLowerCase(); const hit = [...new Set(DOTS.filter(([k]) => new RegExp('\\b' + k + '\\b').test(l)).map(([, c]) => c))].slice(0, 2); if (solid && hit.length) return hit[hit.length - 1]; return hit.length === 2 ? `linear-gradient(135deg,${hit[0]} 50%,${hit[1]} 50%)` : (hit[0] || '#9ca3af') }
 
 function ModelPage({ m: m0 }) {
   const [m, setM] = useState(m0)
@@ -307,7 +307,7 @@ function ModelPage({ m: m0 }) {
   const [tab, setTab] = useState('')
   const tiles = useRef(null)
   const hasF = m.features.length > 0, hasC = m.colours.length > 0
-  const tabs = [hasF && ['features', 'Features'], hasC && ['colours', 'Colours'], ['specs', 'Specifications'], ['enquire', 'Enquire']].filter(Boolean)
+  const tabs = [hasF && ['features', 'Features'], !!m.lifeCards && ['life', 'Life'], hasC && ['colours', 'Colours'], ['specs', 'Specifications'], ['enquire', 'Enquire']].filter(Boolean)
   const pool = ev ? groupEv(EV).filter(f => f.key !== m.family) : PETROL.filter(x => x.name !== m.name)
   const related = [...pool.filter(x => x.cat === m.cat), ...pool.filter(x => x.cat !== m.cat)].slice(0, 4)
   useEffect(() => {
@@ -367,10 +367,17 @@ function ModelPage({ m: m0 }) {
         </section>
       )}
 
+      {m.lifeCards && (
+        <section className="mp-sec alt" id="life" aria-labelledby="lf-t"><div className="wrap">
+          <div className="sec-head"><div><p className="eyebrow">Life with {m.name}</p><h2 id="lf-t" className="display">Roomy. Steady. <span>Ready.</span></h2></div></div>
+          <div className="vp-grid life-grid">{m.lifeCards.map(([t, d, img], i) => <article className="vb-card life-card" key={t} style={{ '--i': i }}>{img && <img className="vb-img" src={encodeURI(`./images/${img}`)} alt={t} loading="lazy" />}<h3>{t}</h3><p>{d}</p></article>)}</div>
+        </div></section>
+      )}
+
       {hasC && (
         <section className="mp-sec" id="colours" aria-labelledby="c-t"><div className="wrap">
           <div className="sec-head"><div><p className="eyebrow">Colours</p><h2 id="c-t" className="display">Pick your colour</h2></div></div>
-          <ul className="swatches">{m.colours.map(c => <li key={c}><i style={{ background: dot(c) }} /><span>{c}</span></li>)}</ul>
+          <ul className="swatches">{m.colours.map(c => <li key={c}><i style={{ background: dot(c, true) }} /><span>{c}</span></li>)}</ul>
           {m.colourPics && <ColourPics m={m} />}
           {m.colourImg && <img className="v2-lineup" src={`./images/${m.colourImg}`} alt={m.name + ' colour range'} loading="lazy" />}
         </div></section>
@@ -457,34 +464,36 @@ function ColourPics({ m }) {
   if (!c) return null
   return (
     <div className="vcp-stage">
-      <b className="vcp-name" aria-live="polite">{c}</b>
-      <img src={`./images/${m.colourPics[c]}`} alt={m.name + ' in ' + c} loading="lazy" />
-      <ul className="vcp-dots" role="tablist" aria-label={m.name + ' colours'}>{names.map((x, k) => <li key={x}><button type="button" role="tab" aria-selected={k === i} aria-label={x} title={x} className={k === i ? 'on' : ''} style={{ background: dot(x) }} onClick={() => setI(k)} /></li>)}</ul>
+      <b className="vcp-name" key={'n' + c} aria-live="polite">{c}</b>
+      <img key={c} src={encodeURI(`./images/${m.colourPics[c]}`)} alt={m.name + ' in ' + c} loading="lazy" />
+      <ul className="vcp-dots" role="tablist" aria-label={m.name + ' colours'}>{names.map((x, k) => <li key={x}><button type="button" role="tab" aria-selected={k === i} aria-label={x} title={x} className={k === i ? 'on' : ''} style={{ background: dot(x, true) }} onClick={() => setI(k)} /></li>)}</ul>
     </div>
   )
 }
 function VxColourPick({ P, V }) {
-  const C = P.colourPick
+  const C = V.colourPick || P.colourPick
   const [i, setI] = useState(0)
   const c = C[i]
   return (
     <section className="mp-sec" id="vx-colours" aria-labelledby="vcp-t"><div className="wrap">
       <div className="sec-head"><div><p className="eyebrow">Colours</p><h2 id="vcp-t" className="display">{P.colourTitle[0]} <span>{P.colourByVariant ? 'VX2 ' + V.name : P.colourTitle[1]}</span></h2></div></div>
       <div className="vcp-stage">
-        <b className="vcp-name" aria-live="polite">{c.name}</b>
-        {c.image ? <img src={`./images/${c.image}`} alt={'VIDA ' + P.model + ' in ' + c.name} loading="lazy" /> : <div className="vcp-empty" style={{ background: dot(c.name) }} role="img" aria-label={c.name + ' colour swatch'} />}
+        <b className="vcp-name" key={'n' + c.name} aria-live="polite">{c.name}</b>
+        {c.image ? <img key={c.name} src={encodeURI(`./images/${c.image}`)} alt={'VIDA ' + P.model + ' in ' + c.name} loading="lazy" /> : <div className="vcp-empty" style={{ background: dot(c.name) }} role="img" aria-label={c.name + ' colour swatch'} />}
       </div>
-      <ul className="vcp-dots" role="tablist" aria-label={P.model + ' colours'}>{C.map((x, k) => <li key={x.name}><button type="button" role="tab" aria-selected={k === i} aria-label={x.name} title={x.name} className={k === i ? 'on' : ''} style={{ background: dot(x.name) }} onClick={() => setI(k)} /></li>)}</ul>
+      <ul className="vcp-dots" role="tablist" aria-label={P.model + ' colours'}>{C.map((x, k) => <li key={x.name}><button type="button" role="tab" aria-selected={k === i} aria-label={x.name} title={x.name} className={k === i ? 'on' : ''} style={{ background: dot(x.name, true) }} onClick={() => setI(k)} /></li>)}</ul>
     </div></section>
   )
 }
 function VxStory({ P }) {
   const [v, setV] = useState(0)
   const V = P.variants[v]
+  const A = V.art ? { ...P.art, ...V.art } : P.art
+  const banner = V.banner || P.banner
   return (
     <>
       <section className="mp-sec" id={P.id} aria-labelledby="vp-t"><div className="wrap">
-        {P.banner && <img className="vp-banner" src={`./images/${P.banner}`} alt={P.eyebrow} loading="lazy" />}
+        {banner && <img className="vp-banner" src={encodeURI(`./images/${banner}`)} alt={P.eyebrow} loading="lazy" />}
         <div className="sec-head"><div><p className="eyebrow">{P.eyebrow}</p><h2 id="vp-t" className="display">{P.head[0]} <span>{P.head[1]}</span></h2><p className="count">{P.sub}</p></div></div>
         <div className="vp-tabs" role="tablist" aria-label={P.model + ' variants'}>{P.variants.map((x, i) => <button key={x.name} type="button" role="tab" aria-selected={i === v} className={i === v ? 'on' : ''} onClick={() => setV(i)}>{x.name}{x.tag && <em>{x.tag}</em>}</button>)}</div>
         <div className="vp-price"><div><h3>Your VX2 {V.name} price in <span>Delhi</span></h3><small>{SHOW_EV_PRICES ? P.priceNote : 'Ask us for the latest price in Mangalore.'}</small></div><b>{px(V.delhi)}</b></div>
@@ -495,21 +504,21 @@ function VxStory({ P }) {
 
       <section className="mp-sec alt" aria-labelledby="vl-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">{P.lifeTitle}</p><h2 id="vl-t" className="display">Roomy. Steady. <span>Ready.</span></h2></div></div>
-        <div className="vp-grid">{P.life.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid">{P.life.map(([t, s]) => <article className="vb-card" key={t}>{A[t] && <img className="vb-img" src={encodeURI(`./images/${A[t]}`)} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
 
       <section className="mp-sec" aria-labelledby="vc2-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">Charging &amp; service</p><h2 id="vc2-t" className="display">{P.powered}</h2></div></div>
-        <div className="vp-grid two">{P.charging.map(c => <article className="vb-card big" key={c.t}>{P.art[c.t] && <img className="vb-img" src={`./images/${P.art[c.t]}`} alt={c.t} loading="lazy" />}<b className="vp-big">{c.big}<i>+</i></b><h3>{c.t}</h3><p>{c.s}</p><a className="more-link" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{c.cta} <Icon n="right" size={14} /></a></article>)}</div>
-        <div className="vp-grid two" style={{ marginTop: 16 }}>{P.homeCharge.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<span className="ico"><Icon n="zap" size={20} /></span><h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid two">{P.charging.map(c => <article className="vb-card big" key={c.t}>{A[c.t] && <img className="vb-img" src={encodeURI(`./images/${A[c.t]}`)} alt={c.t} loading="lazy" />}<b className="vp-big">{c.big}<i>+</i></b><h3>{c.t}</h3><p>{c.s}</p><a className="more-link" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{c.cta} <Icon n="right" size={14} /></a></article>)}</div>
+        <div className="vp-grid two" style={{ marginTop: 16 }}>{P.homeCharge.map(([t, s]) => <article className="vb-card" key={t}>{A[t] && <img className="vb-img" src={encodeURI(`./images/${A[t]}`)} alt={t} loading="lazy" />}<span className="ico"><Icon n="zap" size={20} /></span><h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
 
       <section className="mp-sec alt" aria-labelledby="vs-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">My VIDA app</p><h2 id="vs-t" className="display">{P.app.t}</h2><p className="count">{P.app.s}</p></div><div className="head-act"><a className="btn ghost" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">{P.app.cta}</a></div></div>
-        <div className="vp-grid">{P.app.stats.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid">{P.app.stats.map(([t, s]) => <article className="vb-card" key={t}>{A[t] && <img className="vb-img" src={encodeURI(`./images/${A[t]}`)} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
 
-      <VxColourPick P={P} V={V} />
+      <VxColourPick key={V.name} P={P} V={V} />
       <section className="mp-sec" aria-labelledby="vv-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">{P.model}</p><h2 id="vv-t" className="display">{P.compareHead[0]} <span>{P.compareHead[1]}</span></h2></div></div>
         <div className="vc-scroll"><table className="vc">
@@ -526,7 +535,7 @@ function VxStory({ P }) {
       <VxSavings P={P} />
       <section className="mp-sec" aria-labelledby="va-t"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">{P.model}</p><h2 id="va-t" className="display">Accessories</h2></div><div className="head-act"><a className="btn ghost" href="https://www.vidaworld.com/" target="_blank" rel="noreferrer">View all accessories</a></div></div>
-        <div className="vp-grid">{P.accessories.map(([t, s]) => <article className="vb-card" key={t}>{P.art[t] && <img className="vb-img" src={`./images/${P.art[t]}`} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
+        <div className="vp-grid">{P.accessories.map(([t, s]) => <article className="vb-card" key={t}>{A[t] && <img className="vb-img" src={encodeURI(`./images/${A[t]}`)} alt={t} loading="lazy" />}<h3>{t}</h3><p>{s}</p></article>)}</div>
       </div></section>
     </>
   )
@@ -549,20 +558,6 @@ function VidaCompare() {
     </div></section>
   )
 }
-function VidaBuy() {
-  const B = VIDA_BUY
-  return (
-    <section className="mp-sec alt" id="buy" aria-labelledby="vb-t"><div className="wrap">
-      <div className="sec-head"><div><p className="eyebrow">{B.eyebrow}</p><h2 id="vb-t" className="display">{B.title[0]} <span>{B.title[1]}</span></h2></div></div>
-      <div className="vb-grid">
-        <article className="vb-card wide">{B.dealer.image && <img className="vb-img side" src={`./images/${B.dealer.image}`} alt={B.dealer.t} loading="lazy" />}<span className="ico"><Icon n="pin" size={20} /></span><div><h3>{B.dealer.t}</h3><p>{B.dealer.s}</p></div><a className="btn" href="#contact">{B.dealer.cta}</a></article>
-        <article className="vb-card"><span className="ico"><Icon n="card" size={20} /></span><h3>{B.zero.t}</h3><p>{B.zero.s}</p><a className="more-link" href={waLink('Hi West Coast Motors, tell me about VIDA zero down payment finance.')} target="_blank" rel="noreferrer">{B.zero.cta} <Icon n="right" size={14} /></a></article>
-        <article className="vb-card"><span className="ico"><Icon n="box" size={20} /></span><h3>{B.online.t}</h3><p>{B.online.s}</p><small>{B.online.fine}</small><a className="more-link" href={B.url} target="_blank" rel="noreferrer">{B.online.cta} <Icon n="right" size={14} /></a></article>
-      </div>
-      <a className="vb-save" href="#savings"><span aria-hidden="true">{B.save.emoji}</span><b>{B.save.t}</b><Icon n="right" size={22} /></a>
-    </div></section>
-  )
-}
 function VxExtras() {
   const I = VX2_INFO, B = I.baas
   const [story, setStory] = useState('plus')
@@ -576,7 +571,6 @@ function VxExtras() {
       <section className="mp-sec tabsbar"><div className="wrap"><div className="vp-tabs" role="tablist" aria-label="VIDA VX2 range">{[['plus', 'VX2 Plus'], ['go', 'VX2 Go']].map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={story === k} className={story === k ? 'on' : ''} onClick={() => setStory(k)}>{l}</button>)}</div></div></section>
       <VxStory key={story} P={story === 'go' ? VX2_GO : VX2_PLUS} />
       <VidaCompare />
-      <VidaBuy />
       <section className="mp-sec" aria-labelledby="vx-g"><div className="wrap">
         <div className="sec-head"><div><p className="eyebrow">Ghar Ghar Evooter</p><h2 id="vx-g" className="display">Made for <span>every road</span></h2></div></div>
         <VxGallery />
